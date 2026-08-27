@@ -51,13 +51,15 @@ body:
     id: estimation
     attributes:
       label: Estimation
-      description: Estimate the relative effort required to implement this story.
+      description: Estimate the relative effort using a powers-of-two scale. Larger values represent greater effort and uncertainty.
       options:
         - "1"
         - "2"
-        - "3"
-        - "5"
+        - "4"
         - "8"
+        - "16"
+        - "32"
+        - "64"
     validations:
       required: true
 
