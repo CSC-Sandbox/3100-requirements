@@ -1,6 +1,6 @@
 name: Propose a User Story
 description: Propose a new requirement for the system.
-title: ""
+title: "[Story] "
 labels: []
 body:
   - type: markdown
