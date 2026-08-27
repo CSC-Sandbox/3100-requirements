@@ -1,0 +1,70 @@
+name: Sync story fields
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  sync-fields:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Read proposed values and update Issue Fields
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PRIORITY=$(printf '%s\n' "$ISSUE_BODY" | awk '
+            /^### Priority$/ {getline; print; exit}
+          ' | xargs)
+
+          ESTIMATE=$(printf '%s\n' "$ISSUE_BODY" | awk '
+            /^### Estimation$/ {getline; print; exit}
+          ' | xargs)
+
+          echo "Priority: $PRIORITY"
+          echo "Estimate: $ESTIMATE"
+
+          FIELDS=$(gh api \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "/orgs/$OWNER/issue-fields")
+
+          PRIORITY_ID=$(printf '%s' "$FIELDS" | jq -r '.[] | select(.name=="Priority") | .id')
+          ESTIMATE_ID=$(printf '%s' "$FIELDS" | jq -r '.[] | select(.name=="Estimate") | .id')
+
+          if [[ -z "$PRIORITY_ID" || "$PRIORITY_ID" == "null" ]]; then
+            echo "Priority Issue Field not found"
+            exit 1
+          fi
+
+          if [[ -z "$ESTIMATE_ID" || "$ESTIMATE_ID" == "null" ]]; then
+            echo "Estimate Issue Field not found"
+            exit 1
+          fi
+
+          jq -n \
+            --argjson priority_id "$PRIORITY_ID" \
+            --arg priority "$PRIORITY" \
+            --argjson estimate_id "$ESTIMATE_ID" \
+            --arg estimate "$ESTIMATE" \
+            '{
+              issue_field_values: [
+                {field_id: $priority_id, value: $priority},
+                {field_id: $estimate_id, value: $estimate}
+              ]
+            }' > payload.json
+
+          gh api \
+            --method POST \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/issue-field-values" \
+            --input payload.json
