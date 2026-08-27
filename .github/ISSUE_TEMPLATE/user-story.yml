@@ -1,0 +1,68 @@
+name: Propose a User Story
+description: Propose a new requirement for the system.
+title: ""
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## User Story Proposal
+        Use this form to propose a requirement based on the product vision and customer needs.
+
+        A submitted story is a **proposal**. It may be discussed and revised before becoming part of the product backlog.
+
+  - type: textarea
+    id: story
+    attributes:
+      label: User Story
+      description: Describe the requirement from the perspective of a stakeholder.
+      placeholder: As a [stakeholder], I want [capability], so that [value or reason].
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: List observable conditions that must be satisfied for this story to be considered complete.
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this story from the stakeholder's perspective?
+      options:
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: estimation
+    attributes:
+      label: Estimation
+      description: Estimate the relative effort required to implement this story.
+      options:
+        - "1"
+        - "2"
+        - "3"
+        - "5"
+        - "8"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / Notes
+      description: Provide any additional information that helps explain the requirement.
+      placeholder: Additional context, assumptions, related requirements, constraints, etc.
+    validations:
+      required: false
