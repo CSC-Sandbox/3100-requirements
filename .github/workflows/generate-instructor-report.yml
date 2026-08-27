@@ -1,0 +1,171 @@
+name: Generate instructor story report
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate reports
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p reports
+
+          gh issue list \
+            --repo "$REPOSITORY" \
+            --state all \
+            --limit 1000 \
+            --json number,title,author,body,labels,url,comments,state \
+            > issues.json
+
+          python3 <<'PY'
+          import csv
+          import json
+          import re
+          from pathlib import Path
+
+          with open("issues.json", encoding="utf-8") as f:
+              issues = json.load(f)
+
+          def section(body, heading):
+              if not body:
+                  return ""
+              pattern = rf"(?ms)^### {re.escape(heading)}\s*\n(.*?)(?=^### |\Z)"
+              match = re.search(pattern, body)
+              return match.group(1).strip() if match else ""
+
+          def clean(text):
+              return re.sub(r"\s+", " ", text or "").strip()
+
+          def story_status(labels):
+              names = [x["name"] for x in labels]
+              for status in [
+                  "story-accepted",
+                  "story-needs-revision",
+                  "story-proposed",
+                  "story-rejected",
+                  "story-duplicate",
+              ]:
+                  if status in names:
+                      return status
+              return ""
+
+          rows = []
+          authors = set()
+
+          for issue in issues:
+              labels = issue.get("labels", [])
+
+              # Only include Story-related issues
+              if not any(
+                  x["name"].startswith("story-")
+                  for x in labels
+              ):
+                  continue
+
+              author = (issue.get("author") or {}).get("login", "")
+              if author:
+                  authors.add(author)
+
+              rows.append({
+                  "Issue": issue["number"],
+                  "Title": issue["title"],
+                  "Author": author,
+                  "User Story": clean(section(issue.get("body", ""), "User Story")),
+                  "Acceptance Criteria": clean(section(issue.get("body", ""), "Acceptance Criteria")),
+                  "Priority": clean(section(issue.get("body", ""), "Priority")),
+                  "Estimate": clean(section(issue.get("body", ""), "Estimation")),
+                  "Context / Notes": clean(section(issue.get("body", ""), "Context / Notes")),
+                  "Story Status": story_status(labels),
+                  "Issue State": issue.get("state", ""),
+                  "Comments": len(issue.get("comments", [])),
+                  "URL": issue["url"],
+              })
+
+          rows.sort(key=lambda x: x["Issue"])
+
+          fields = [
+              "Issue",
+              "Title",
+              "Author",
+              "User Story",
+              "Acceptance Criteria",
+              "Priority",
+              "Estimate",
+              "Context / Notes",
+              "Story Status",
+              "Issue State",
+              "Comments",
+              "URL",
+          ]
+
+          with open("reports/story-review.csv", "w", newline="", encoding="utf-8-sig") as f:
+              writer = csv.DictWriter(f, fieldnames=fields)
+              writer.writeheader()
+              writer.writerows(rows)
+
+          with open("reports/story-review.md", "w", encoding="utf-8") as f:
+              f.write("# CSC 3100 — Instructor Story Review\n\n")
+              f.write(f"**Stories:** {len(rows)}  \n")
+              f.write(f"**Unique authors:** {len(authors)}\n\n")
+
+              f.write("## Student GitHub Accounts\n\n")
+              if authors:
+                  f.write(", ".join(f"@{a}" for a in sorted(authors)))
+                  f.write("\n\n")
+              else:
+                  f.write("_No story authors found._\n\n")
+
+              f.write("## Story Review\n\n")
+
+              for row in rows:
+                  f.write(f"### #{row['Issue']} — {row['Title']}\n\n")
+                  f.write(f"**Author:** @{row['Author']}  \n")
+                  f.write(f"**Status:** {row['Story Status']}  \n")
+                  f.write(f"**Priority:** {row['Priority']}  \n")
+                  f.write(f"**Estimate:** {row['Estimate']}  \n")
+                  f.write(f"**Comments:** {row['Comments']}  \n")
+                  f.write(f"**Issue:** {row['URL']}\n\n")
+
+                  f.write("**User Story**\n\n")
+                  f.write((row["User Story"] or "_Not provided_") + "\n\n")
+
+                  f.write("**Acceptance Criteria**\n\n")
+                  f.write((row["Acceptance Criteria"] or "_Not provided_") + "\n\n")
+
+                  if row["Context / Notes"]:
+                      f.write("**Context / Notes**\n\n")
+                      f.write(row["Context / Notes"] + "\n\n")
+
+                  f.write("---\n\n")
+          PY
+
+      - name: Commit updated reports
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add reports/story-review.md reports/story-review.csv
+
+          if git diff --cached --quiet; then
+            echo "No report changes."
+            exit 0
+          fi
+
+          git commit -m "Update instructor story report"
+          git push
