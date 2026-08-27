@@ -5,14 +5,11 @@ labels: []
 body:
   - type: markdown
     attributes:
-value: |
-  ## User Story Proposal
-
-  Use this form to propose a requirement based on the product vision and customer needs.
-
-  **Title:** Provide a short, descriptive subject for the story.
-
-  A submitted story is a **proposal**. It may be discussed and revised before becoming part of the product backlog.
+      value: |
+        ## User Story Proposal
+        Use this form to propose a requirement based on the product vision and customer needs.
+        **Title:** Provide a short, descriptive subject for the story.
+        A submitted story is a **proposal**. It may be discussed and revised before becoming part of the product backlog.
   - type: textarea
     id: story
     attributes:
