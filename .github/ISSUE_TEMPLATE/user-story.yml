@@ -27,7 +27,8 @@ body:
     id: acceptance
     attributes:
       label: Acceptance Criteria
-      description: List observable and testable conditions that must be satisfied for the implemented story to be accepted.      placeholder: |
+      description: List observable and testable conditions that must be satisfied for the implemented story to be accepted.      
+      placeholder: |
         - [ ] Criterion 1
         - [ ] Criterion 2
         - [ ] Criterion 3
