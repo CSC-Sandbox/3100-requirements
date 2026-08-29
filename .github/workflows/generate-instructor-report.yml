@@ -36,7 +36,6 @@ jobs:
           import csv
           import json
           import re
-          from pathlib import Path
 
           with open("issues.json", encoding="utf-8") as f:
               issues = json.load(f)
@@ -44,8 +43,10 @@ jobs:
           def section(body, heading):
               if not body:
                   return ""
+
               pattern = rf"(?ms)^### {re.escape(heading)}\s*\n(.*?)(?=^### |\Z)"
               match = re.search(pattern, body)
+
               return match.group(1).strip() if match else ""
 
           def clean(text):
@@ -53,6 +54,7 @@ jobs:
 
           def story_status(labels):
               names = [x["name"] for x in labels]
+
               for status in [
                   "story-accepted",
                   "story-needs-revision",
@@ -62,10 +64,44 @@ jobs:
               ]:
                   if status in names:
                       return status
+
               return ""
 
+          def student_identity(comments):
+              """
+              Find a comment in the format:
+
+                  Student: Firstname Lastname
+
+              The student's GitHub account is taken from the
+              original author of that comment.
+
+              Editing the comment later does not change the
+              original comment author.
+              """
+
+              for comment in comments or []:
+                  body = (comment.get("body") or "").strip()
+
+                  match = re.match(
+                      r"(?i)^Student:\s*(.+?)\s*$",
+                      body
+                  )
+
+                  if match:
+                      student_name = clean(match.group(1))
+
+                      github_login = (
+                          (comment.get("author") or {}).get("login", "")
+                      )
+
+                      return student_name, github_login
+
+              return "", ""
+
           rows = []
-          authors = set()
+          issue_authors = set()
+          students = {}
 
           for issue in issues:
               labels = issue.get("labels", [])
@@ -77,22 +113,62 @@ jobs:
               ):
                   continue
 
-              author = (issue.get("author") or {}).get("login", "")
-              if author:
-                  authors.add(author)
+              issue_author = (
+                  (issue.get("author") or {}).get("login", "")
+              )
+
+              if issue_author:
+                  issue_authors.add(issue_author)
+
+              student_name, student_github = student_identity(
+                  issue.get("comments", [])
+              )
+
+              # Keep one GitHub -> student name mapping
+              if student_name and student_github:
+                  students[student_github] = student_name
 
               rows.append({
                   "Issue": issue["number"],
                   "Title": issue["title"],
-                  "Author": author,
-                  "User Story": clean(section(issue.get("body", ""), "User Story")),
-                  "Acceptance Criteria": clean(section(issue.get("body", ""), "Acceptance Criteria")),
-                  "Priority": clean(section(issue.get("body", ""), "Priority")),
-                  "Estimate": clean(section(issue.get("body", ""), "Estimation")),
-                  "Context / Notes": clean(section(issue.get("body", ""), "Context / Notes")),
+                  "Student": student_name,
+                  "Student GitHub": student_github,
+                  "Issue Author": issue_author,
+                  "User Story": clean(
+                      section(
+                          issue.get("body", ""),
+                          "User Story"
+                      )
+                  ),
+                  "Acceptance Criteria": clean(
+                      section(
+                          issue.get("body", ""),
+                          "Acceptance Criteria"
+                      )
+                  ),
+                  "Priority": clean(
+                      section(
+                          issue.get("body", ""),
+                          "Priority"
+                      )
+                  ),
+                  "Estimate": clean(
+                      section(
+                          issue.get("body", ""),
+                          "Estimation"
+                      )
+                  ),
+                  "Context / Notes": clean(
+                      section(
+                          issue.get("body", ""),
+                          "Context / Notes"
+                      )
+                  ),
                   "Story Status": story_status(labels),
                   "Issue State": issue.get("state", ""),
-                  "Comments": len(issue.get("comments", [])),
+                  "Comments": len(
+                      issue.get("comments", [])
+                  ),
                   "URL": issue["url"],
               })
 
@@ -101,7 +177,9 @@ jobs:
           fields = [
               "Issue",
               "Title",
-              "Author",
+              "Student",
+              "Student GitHub",
+              "Issue Author",
               "User Story",
               "Acceptance Criteria",
               "Priority",
@@ -113,45 +191,153 @@ jobs:
               "URL",
           ]
 
-          with open("reports/story-review.csv", "w", newline="", encoding="utf-8-sig") as f:
-              writer = csv.DictWriter(f, fieldnames=fields)
+          with open(
+              "reports/story-review.csv",
+              "w",
+              newline="",
+              encoding="utf-8-sig"
+          ) as f:
+
+              writer = csv.DictWriter(
+                  f,
+                  fieldnames=fields
+              )
+
               writer.writeheader()
               writer.writerows(rows)
 
-          with open("reports/story-review.md", "w", encoding="utf-8") as f:
-              f.write("# CSC 3100 — Instructor Story Review\n\n")
-              f.write(f"**Stories:** {len(rows)}  \n")
-              f.write(f"**Unique authors:** {len(authors)}\n\n")
+          with open(
+              "reports/story-review.md",
+              "w",
+              encoding="utf-8"
+          ) as f:
 
-              f.write("## Student GitHub Accounts\n\n")
-              if authors:
-                  f.write(", ".join(f"@{a}" for a in sorted(authors)))
-                  f.write("\n\n")
+              f.write(
+                  "# CSC 3100 — Instructor Story Review\n\n"
+              )
+
+              f.write(
+                  f"**Stories:** {len(rows)}  \n"
+              )
+
+              f.write(
+                  f"**Identified students:** {len(students)}\n\n"
+              )
+
+              f.write(
+                  "## Student GitHub Accounts\n\n"
+              )
+
+              if students:
+                  for github, name in sorted(
+                      students.items(),
+                      key=lambda x: x[1].lower()
+                  ):
+                      f.write(
+                          f"- **{name}** — @{github}\n"
+                      )
+
+                  f.write("\n")
+
               else:
-                  f.write("_No story authors found._\n\n")
+                  f.write(
+                      "_No Student: identification comments found._\n\n"
+                  )
 
-              f.write("## Story Review\n\n")
+              f.write(
+                  "## Story Review\n\n"
+              )
 
               for row in rows:
-                  f.write(f"### #{row['Issue']} — {row['Title']}\n\n")
-                  f.write(f"**Author:** @{row['Author']}  \n")
-                  f.write(f"**Status:** {row['Story Status']}  \n")
-                  f.write(f"**Priority:** {row['Priority']}  \n")
-                  f.write(f"**Estimate:** {row['Estimate']}  \n")
-                  f.write(f"**Comments:** {row['Comments']}  \n")
-                  f.write(f"**Issue:** {row['URL']}\n\n")
 
-                  f.write("**User Story**\n\n")
-                  f.write((row["User Story"] or "_Not provided_") + "\n\n")
+                  f.write(
+                      f"### #{row['Issue']} — {row['Title']}\n\n"
+                  )
 
-                  f.write("**Acceptance Criteria**\n\n")
-                  f.write((row["Acceptance Criteria"] or "_Not provided_") + "\n\n")
+                  if row["Student"]:
+                      f.write(
+                          f"**Student:** {row['Student']}  \n"
+                      )
+
+                      f.write(
+                          f"**Student GitHub:** "
+                          f"@{row['Student GitHub']}  \n"
+                      )
+
+                  else:
+                      f.write(
+                          "**Student:** _Not identified_  \n"
+                      )
+
+                  f.write(
+                      f"**Issue Author:** "
+                      f"@{row['Issue Author']}  \n"
+                  )
+
+                  f.write(
+                      f"**Status:** "
+                      f"{row['Story Status']}  \n"
+                  )
+
+                  f.write(
+                      f"**Priority:** "
+                      f"{row['Priority']}  \n"
+                  )
+
+                  f.write(
+                      f"**Estimate:** "
+                      f"{row['Estimate']}  \n"
+                  )
+
+                  f.write(
+                      f"**Comments:** "
+                      f"{row['Comments']}  \n"
+                  )
+
+                  f.write(
+                      f"**Issue:** "
+                      f"{row['URL']}\n\n"
+                  )
+
+                  f.write(
+                      "**User Story**\n\n"
+                  )
+
+                  f.write(
+                      (
+                          row["User Story"]
+                          or "_Not provided_"
+                      )
+                      + "\n\n"
+                  )
+
+                  f.write(
+                      "**Acceptance Criteria**\n\n"
+                  )
+
+                  f.write(
+                      (
+                          row["Acceptance Criteria"]
+                          or "_Not provided_"
+                      )
+                      + "\n\n"
+                  )
 
                   if row["Context / Notes"]:
-                      f.write("**Context / Notes**\n\n")
-                      f.write(row["Context / Notes"] + "\n\n")
 
-                  f.write("---\n\n")
+                      f.write(
+                          "**Context / Notes**\n\n"
+                      )
+
+                      f.write(
+                          row["Context / Notes"]
+                          + "\n\n"
+                      )
+
+                  f.write(
+                      "---\n\n"
+                  )
+
           PY
 
       - name: Commit updated reports
@@ -160,7 +346,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add reports/story-review.md reports/story-review.csv
+          git add \
+            reports/story-review.md \
+            reports/story-review.csv
 
           if git diff --cached --quiet; then
             echo "No report changes."
