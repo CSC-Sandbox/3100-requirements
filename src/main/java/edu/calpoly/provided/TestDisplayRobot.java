@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /** Course-provided local robot-pose communication service. */
-public class RobotPoseServer {
+public class TestDisplayRobot {
     private static final int PORT = 5000;
     private static final List<PrintWriter> receivers = new CopyOnWriteArrayList<>();
     private static final Random random = new Random();
