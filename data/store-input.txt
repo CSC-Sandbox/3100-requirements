@@ -1,0 +1,5 @@
+Hello from CSC 3100
+Robot data received
+Gaze sample accepted
+System is operating normally
+End of sample messages

@@ -33,8 +33,15 @@ Each assigned Issue also contains the specific programming instructions, testing
                     │   ├── TestEncryption.java
                     │   ├── TestMessageValidator.java
                     │   ├── TestEnterMessage.java
-                    │   └── TestDisplayMessages.java
+                    │   ├── TestDisplayMessages.java
+                    │   ├── TestMonitorData.java
+                    │   ├── TestStoreMessages.java
+                    │   └── TestRetrieveMessages.java
                     └── ...
+├── data/
+│   ├── store-input.txt
+│   ├── messages.csv
+│   └── empty-messages.csv
 ```
 
 The package:
@@ -160,6 +167,8 @@ TestMessageValidator
 TestEnterMessage
 TestDisplayMessages
 TestMonitorData
+TestStoreMessages
+TestRetrieveMessages
 ```
 
 Your assigned GitHub Issue identifies the test program to use and explains the expected behavior.
