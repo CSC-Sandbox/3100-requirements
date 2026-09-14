@@ -2,7 +2,11 @@
 
 This repository contains the product backlog, course-provided infrastructure, and student implementations developed throughout the course.
 
-The GitHub Issues in this repository are the source of truth for the system's User Stories and Acceptance Criteria.
+## Requirements
+
+GitHub Issues are the source of truth for the system's **User Stories and Acceptance Criteria**.
+
+Each assigned Issue also contains the specific programming instructions, testing information, and documentation requirements for that assignment.
 
 ## Repository Structure
 
@@ -10,25 +14,37 @@ The GitHub Issues in this repository are the source of truth for the system's Us
 3100-requirements/
 ├── README.md
 ├── pom.xml
+├── docs/
+│   └── ...
 └── src/
     └── main/
         └── java/
             └── edu/
                 └── calpoly/
-                    └── provided/
-                        ├── Broker.java
-                        └── TestGatherRobot.java
+                    ├── provided/
+                    │   ├── Broker.java
+                    │   ├── TestGatherRobot.java
+                    │   ├── TestDisplayRobot.java
+                    │   ├── TestGatherEye.java
+                    │   └── TestDisplayEye.java
+                    └── ...
 ```
 
-The package `edu.calpoly.provided` contains infrastructure supplied by the instructor.
+The package:
+
+```text
+edu.calpoly.provided
+```
+
+contains infrastructure supplied by the instructor.
 
 Students should **use these classes but should not modify them** unless specifically instructed.
+
+Additional provided classes may be added as the project evolves.
 
 ## Programming Workflow
 
 Programming work begins from an assigned User Story.
-
-The expected workflow is:
 
 ```text
 User Story
@@ -50,59 +66,69 @@ Merge
 
 Do not commit programming work directly to `main`.
 
-Each programming assignment should be completed on a separate branch associated with the assigned User Story.
-
-Example:
+Create a separate branch for your assigned User Story. For example:
 
 ```text
 13-gather-robot
 ```
 
-A Pull Request should identify the User Story being implemented.
-
-Example:
+Your Pull Request should identify the User Story being implemented. For example:
 
 ```text
 Implement #13 Gather Robot Pose
 ```
 
-## Provided Communication Infrastructure
+## Provided Infrastructure
 
-For the first programming assignment, communication infrastructure is provided through:
+Course-provided classes are located under:
+
+```text
+src/main/java/edu/calpoly/provided/
+```
+
+The provided `Broker` class supplies the communication interface used by the applications.
+
+For example:
 
 ```java
 import edu.calpoly.provided.Broker;
-```
 
-Example usage:
-
-```java
 Broker broker = new Broker("localhost", 5000);
-broker.send(message);
 ```
 
-`Broker` hides the underlying socket communication from the application.
+Depending on the assigned User Story, an application may send or receive data through the `Broker`.
 
-For the first assignment, communication occurs locally using TCP sockets. Future assignments may use different communication mechanisms while preserving a similar application-facing abstraction.
+The details of what your program must send, receive, display, or test are specified in your assigned GitHub Issue.
 
 ## Testing
 
-`TestGatherRobot.java` is provided for testing the Gather Robot Pose User Story.
+Course-provided testing programs follow the naming convention:
 
-Start the test program first:
+```text
+Test...
+```
+
+For example:
 
 ```text
 TestGatherRobot
+TestDisplayRobot
+TestGatherEye
+TestDisplayEye
 ```
 
-It waits for data on:
+Your assigned GitHub Issue identifies the test program to use and explains the expected behavior.
+
+In general, start the provided test program first and leave it running, then run your implementation.
+
+## Documentation
+
+Design documentation for each User Story belongs under:
 
 ```text
-localhost:5000
+docs/
 ```
 
-Then run the student's implementation.
+Use the directory specified in your assigned GitHub Issue.
 
-When data is sent successfully, the test program prints the received message.
-
-The student's program is responsible for deciding how robot pose data is represented and organized internally.
+Do **not** modify this repository's main `README.md` as part of your programming assignment.
