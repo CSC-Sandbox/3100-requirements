@@ -27,7 +27,13 @@ Each assigned Issue also contains the specific programming instructions, testing
                     │   ├── TestDisplayRobot.java
                     │   ├── TestGatherEye.java
                     │   ├── TestDisplayEye.java
-                    │   └── TestDisplayAffect.java
+                    │   ├── TestDisplayAffect.java
+                    │   ├── TestDisplayLidar.java
+                    │   ├── Encryption.java
+                    │   ├── TestEncryption.java
+                    │   ├── TestMessageValidator.java
+                    │   ├── TestEnterMessage.java
+                    │   └── TestDisplayMessages.java
                     └── ...
 ```
 
@@ -87,7 +93,7 @@ Course-provided classes are located under:
 src/main/java/edu/calpoly/provided/
 ```
 
-The provided `Broker` class supplies the communication interface used by the applications.
+The provided `Broker` class supplies the communication interface used by assignments that exchange data through the course communication service.
 
 For example:
 
@@ -97,9 +103,11 @@ import edu.calpoly.provided.Broker;
 Broker broker = new Broker("localhost", 5000);
 ```
 
-Depending on the assigned User Story, an application may send or receive data through the `Broker`.
+Depending on the assigned User Story, an application may send or receive data through the `Broker`. Not every assignment uses the `Broker`.
 
-The details of what your program must send, receive, display, or test are specified in your assigned GitHub Issue.
+The package also contains other course utilities when needed. For example, `Encryption` provides the encryption/decryption operations used by the security module.
+
+The details of what your program must send, receive, display, validate, or test are specified in your assigned GitHub Issue.
 
 ## Testing
 
@@ -117,6 +125,11 @@ TestDisplayRobot
 TestGatherEye
 TestDisplayEye
 TestDisplayAffect
+TestDisplayLidar
+TestEncryption
+TestMessageValidator
+TestEnterMessage
+TestDisplayMessages
 ```
 
 Your assigned GitHub Issue identifies the test program to use and explains the expected behavior.
