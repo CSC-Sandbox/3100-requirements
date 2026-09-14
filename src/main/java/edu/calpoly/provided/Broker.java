@@ -18,21 +18,17 @@ public class Broker {
         this.port = port;
     }
 
-    /** Sends one message to the communication service. */
+    /** Sends one line to the communication service. */
     public void send(String message) {
         try (Socket socket = new Socket(host, port);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
-            out.println("SEND");
             out.println(message);
         } catch (IOException e) {
             throw new IllegalStateException("Unable to send message to " + host + ":" + port, e);
         }
     }
 
-    /**
-     * Receives the next message from the communication service.
-     * The first call establishes a persistent receiving connection.
-     */
+    /** Receives the next message from a course-provided display tester. */
     public String receive() {
         try {
             if (receiveSocket == null || receiveSocket.isClosed()) {
