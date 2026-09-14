@@ -49,7 +49,7 @@ public class TestDisplayEye {
                     double x = (double) step / STEPS_X;
                     if (!leftToRight) x = 1.0 - x;
 
-                    out.printf(Locale.US, "%.2f,%.2f%n", x, y);
+                    out.printf(Locale.US, "GAZE,%.2f,%.2f%n", x, y);
                     out.flush();
                     sleep();
                 }

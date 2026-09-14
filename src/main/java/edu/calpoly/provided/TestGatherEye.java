@@ -12,6 +12,7 @@ public class TestGatherEye {
 
     public static void main(String[] args) {
         System.out.println("Waiting for gaze data on localhost:" + PORT + "...");
+        System.out.println("Expected format: GAZE,X,Y");
 
         try (ServerSocket server = new ServerSocket(PORT)) {
             while (true) {
@@ -21,6 +22,9 @@ public class TestGatherEye {
                     if (message != null) {
                         System.out.println("Gaze Position Received");
                         System.out.println(message);
+                        if (!message.startsWith("GAZE,")) {
+                            System.out.println("WARNING: message should begin with GAZE,");
+                        }
                     }
                 }
             }

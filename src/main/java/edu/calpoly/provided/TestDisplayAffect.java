@@ -48,7 +48,7 @@ public class TestDisplayAffect {
             double interest = wave(t * 0.85, 3.00, 0.55, 0.30);
             double stress = wave(t * 0.55, 4.00, 0.35, 0.25);
 
-            out.printf(Locale.US, "%.2f,%.2f,%.2f,%.2f,%.2f%n",
+            out.printf(Locale.US, "AFFECT,%.2f,%.2f,%.2f,%.2f,%.2f%n",
                     focus, excitement, engagement, interest, stress);
             out.flush();
 

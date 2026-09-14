@@ -12,6 +12,7 @@ public class TestGatherRobot {
 
     public static void main(String[] args) {
         System.out.println("Waiting for robot pose data on localhost:" + PORT + "...");
+        System.out.println("Expected format: ROBOT,J1,J2,J3,J4,J5,J6,X,Y,Z");
 
         try (ServerSocket server = new ServerSocket(PORT)) {
             while (true) {
@@ -21,6 +22,9 @@ public class TestGatherRobot {
                     if (message != null) {
                         System.out.println("Robot Pose Received");
                         System.out.println(message);
+                        if (!message.startsWith("ROBOT,")) {
+                            System.out.println("WARNING: message should begin with ROBOT,");
+                        }
                     }
                 }
             }

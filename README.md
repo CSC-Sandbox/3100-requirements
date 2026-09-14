@@ -49,6 +49,35 @@ Students should **use these classes but should not modify them** unless specific
 
 Additional provided classes may be added as the project evolves.
 
+
+## Common Data Message Contract
+
+Data messages exchanged by the Robot, Gaze, Affect, and LiDAR modules use a common text format:
+
+```text
+TYPE,data...
+```
+
+The first field identifies the data source. The remaining fields contain the data for that source.
+
+```text
+ROBOT,J1,J2,J3,J4,J5,J6,X,Y,Z
+GAZE,X,Y
+AFFECT,focus,excitement,engagement,interest,stress
+LIDAR,X,Y,Z
+```
+
+Examples:
+
+```text
+ROBOT,0.420,-0.180,0.750,0.100,-0.320,0.570,0.250,0.100,0.420
+GAZE,0.35,0.72
+AFFECT,0.72,0.44,0.65,0.58,0.33
+LIDAR,1.25,-0.40,0.15
+```
+
+The `Broker` transports these messages as strings. It does not interpret the message type or values.
+
 ## Programming Workflow
 
 Programming work begins from an assigned User Story.
@@ -130,6 +159,7 @@ TestEncryption
 TestMessageValidator
 TestEnterMessage
 TestDisplayMessages
+TestMonitorData
 ```
 
 Your assigned GitHub Issue identifies the test program to use and explains the expected behavior.

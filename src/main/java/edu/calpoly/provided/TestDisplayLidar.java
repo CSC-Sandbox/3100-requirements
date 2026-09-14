@@ -47,7 +47,7 @@ public class TestDisplayLidar {
     private static void sendScan(PrintWriter out, List<Point> scan) throws IOException {
         while (!out.checkError()) {
             for (Point point : scan) {
-                out.printf(Locale.US, "%.2f,%.2f,%.2f%n", point.x(), point.y(), point.z());
+                out.printf(Locale.US, "LIDAR,%.2f,%.2f,%.2f%n", point.x(), point.y(), point.z());
                 out.flush();
                 sleep();
                 if (out.checkError()) return;
