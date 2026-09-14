@@ -26,7 +26,8 @@ Each assigned Issue also contains the specific programming instructions, testing
                     │   ├── TestGatherRobot.java
                     │   ├── TestDisplayRobot.java
                     │   ├── TestGatherEye.java
-                    │   └── TestDisplayEye.java
+                    │   ├── TestDisplayEye.java
+                    │   └── TestDisplayAffect.java
                     └── ...
 ```
 
@@ -115,6 +116,7 @@ TestGatherRobot
 TestDisplayRobot
 TestGatherEye
 TestDisplayEye
+TestDisplayAffect
 ```
 
 Your assigned GitHub Issue identifies the test program to use and explains the expected behavior.
