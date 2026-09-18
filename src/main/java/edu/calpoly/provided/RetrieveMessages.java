@@ -7,40 +7,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RetrieveMessages {
-    private static final int PORT = 5000;
-    private static final Path DATA_FILE = Path.of("data", "messages.csv");
+    private static final int DEFAULT_PORT = 5000;
+    private static final Path DEFAULT_DATA_FILE = Path.of("data", "messages.csv");
 
-    private static List<String> messages = new ArrayList<>();
+    private Path dataFile;
+    private int port;
+    private List<String> messages = new ArrayList<>();
 
-    public static void main(String[] args) throws Exception {
-        RetrieveMessages retriever = new RetrieveMessages();
-        retriever.readFile(DATA_FILE);
+    public RetrieveMessages(Path dataFile, int port) {
+        this.dataFile = dataFile;
+        this.port = port;
+    }
 
-        if (messages.isEmpty()) {
+    public static void main(String[] args) throws Exception {        
+        RetrieveMessages retriever = new RetrieveMessages(DEFAULT_DATA_FILE, DEFAULT_PORT);
+        retriever.readFile();
+
+        if (retriever.messages.isEmpty()) {
             System.err.println("No messages to retrieve.");
             return;
         }
 
-        Broker broker = new Broker("localhost", PORT);
-
-        for (String message : messages) {
-            broker.send(message);
-        }
+        retriever.sendMessages();
     }
 
-    private void readFile(Path filePath) {
-        if (!Files.exists(DATA_FILE)) {
-            System.err.println("Missing Storage File: " + DATA_FILE.toAbsolutePath());
+    private void readFile() {
+        if (!Files.exists(dataFile)) {
+            System.err.println("Missing Storage File: " + dataFile.toAbsolutePath());
             return;
         }
 
         try {
-            messages = Files.readAllLines(filePath, StandardCharsets.UTF_8)
+            messages = Files.readAllLines(dataFile, StandardCharsets.UTF_8)
                     .stream()
                     .filter(line -> !line.isBlank())
                     .toList();
         } catch (Exception e) {
             System.err.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    private void sendMessages() {
+        Broker broker = new Broker("localhost", port);
+
+        for (String message : messages) {
+            broker.send(message);
         }
     }
 }
