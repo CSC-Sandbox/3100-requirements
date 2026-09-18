@@ -8,19 +8,22 @@ import java.util.List;
 
 public class RetrieveMessages {
     private static final int DEFAULT_PORT = 5000;
+    private static final String DEFAULT_HOST = "localhost";
     private static final Path DEFAULT_DATA_FILE = Path.of("data", "messages.csv");
 
     private Path dataFile;
+    private String host = "localhost";
     private int port;
     private List<String> messages = new ArrayList<>();
 
-    public RetrieveMessages(Path dataFile, int port) {
+    public RetrieveMessages(Path dataFile, String host, int port) {
         this.dataFile = dataFile;
+        this.host = host;
         this.port = port;
     }
 
-    public static void main(String[] args) throws Exception {        
-        RetrieveMessages retriever = new RetrieveMessages(DEFAULT_DATA_FILE, DEFAULT_PORT);
+    public static void main(String[] args) {        
+        RetrieveMessages retriever = new RetrieveMessages(DEFAULT_DATA_FILE, DEFAULT_HOST, DEFAULT_PORT);
         retriever.readFile();
 
         if (retriever.messages.isEmpty()) {
@@ -48,7 +51,7 @@ public class RetrieveMessages {
     }
 
     private void sendMessages() {
-        Broker broker = new Broker("localhost", port);
+        Broker broker = new Broker(host, port);
 
         for (String message : messages) {
             broker.send(message);
