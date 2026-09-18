@@ -23,10 +23,7 @@ public class RetrieveMessages {
 
         Broker broker = new Broker("localhost", PORT);
 
-        System.out.println("Retrieved " + messages.size() + " messages from " + DATA_FILE.toAbsolutePath());
-
         for (String message : messages) {
-            System.out.println("Sending message: " + message);
             broker.send(message);
         }
     }
