@@ -51,10 +51,14 @@ public class RetrieveMessages {
     }
 
     private void sendMessages() {
-        Broker broker = new Broker(host, port);
+        try {
+            Broker broker = new Broker(host, port);
 
-        for (String message : messages) {
-            broker.send(message);
+            for (String message : messages) {
+                broker.send(message);
+            }
+        } catch (Exception e) {
+            System.err.println("Error sending messages: " + e.getMessage());
         }
     }
 }
