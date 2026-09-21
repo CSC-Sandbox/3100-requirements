@@ -23,7 +23,7 @@ public class EnterMessage {
 
         frame.add(new JScrollPane(textArea), BorderLayout.CENTER);
         frame.add(sendButton, BorderLayout.SOUTH);
-
+ 
         sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String message = textArea.getText().trim();
