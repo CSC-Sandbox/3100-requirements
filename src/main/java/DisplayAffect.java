@@ -12,6 +12,7 @@ import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.chart.ui.UIUtils;
 import org.jfree.data.xy.*;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class DisplayAffect extends ApplicationFrame {
@@ -59,10 +60,7 @@ public class DisplayAffect extends ApplicationFrame {
     /**
      * Receive a message from the broker and append it to existing data.
      */
-    public void update() {
-        String message = broker.receive();
-        Affect affect = Affect.fromString(message);
-
+    public void update(Affect affect) {
         double focusSample = focusSeries.getMaxX();
         focusSeries.add(Double.isNaN(focusSample) ? 1.0 : focusSample + 1.0, affect.getFocus());
 
@@ -132,14 +130,21 @@ public class DisplayAffect extends ApplicationFrame {
         Broker broker = new Broker("localhost", 5000);
         DisplayAffect da = new DisplayAffect(broker);
 
-        da.update();
+        Thread receiverThread = new Thread(() -> {
+            while (true) {
+                String message = broker.receive();
+                Affect affect = Affect.fromString(message);
+
+                SwingUtilities.invokeLater(() -> {
+                    da.update(affect);
+                });
+            }
+        });
+
+        receiverThread.start();
 
         da.pack();
         UIUtils.centerFrameOnScreen(da);
         da.setVisible(true);
-
-        for (;;) {
-            da.update();
-        }
     }
 }
