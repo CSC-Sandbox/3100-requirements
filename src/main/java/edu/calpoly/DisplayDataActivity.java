@@ -17,6 +17,8 @@ import edu.calpoly.provided.Broker;
 public class DisplayDataActivity {
     public static void main(String[] args) {
         Broker broker = new Broker("localhost", 5000); // Creates a broker to received msg from the local services
+        // NOW CONNECT TO THE ACTIVITYTRACKER
+        ActivityTracker tracker = new ActivityTracker();
         
         
 
@@ -47,6 +49,10 @@ public class DisplayDataActivity {
                 System.out.println("INVALID SOURCE TYPE.");
                 continue;
             }
+
+            // now call the ActivityTracker:
+            tracker.recordTimestamp(msgType);
+            System.out.println(msgType + " count: " + tracker.getRecentCount(msgType)); // TEMPORARY
 
             // SubTask #73(d): Classify the message to each source
             switch (msgType) {
@@ -80,6 +86,7 @@ public class DisplayDataActivity {
 
             // then display the msg
             System.out.println("Received: " + msg); //concadination
+            
         }
 
         
