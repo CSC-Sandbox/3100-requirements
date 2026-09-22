@@ -30,4 +30,17 @@ public class RobotPose {
         this.Y = values[7];
         this.Z = values[8];
     }
+
+    @Override
+    public String toString() {
+        double[] vals = getValues();
+        String valsString = "ROBOT,";
+        for(int i = 0; i < vals.length; i++){
+            valsString = valsString + vals[i];
+            if(i < vals.length-1){
+                valsString = valsString + ",";
+            }
+        }
+        return valsString;
+    }
 }

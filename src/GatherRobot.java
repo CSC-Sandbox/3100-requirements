@@ -5,14 +5,6 @@ public class GatherRobot {
 
         double[] vals = pose.getValues();
 
-        String valsString = "ROBOT,";
-        for(int i = 0; i < vals.length; i++){
-            valsString = valsString + vals[i];
-            if(i < vals.length-1){
-                valsString = valsString + ",";
-            }
-        }
-
         System.out.println("Generated Robot Pose");
         System.out.println();
         System.out.println("J1: " + (vals[0]<0 ? "" : " ") + vals[0]); // using a ? operator,
@@ -26,8 +18,8 @@ public class GatherRobot {
         System.out.println("Z:  " + (vals[8]<0 ? "" : " ") + vals[8]);
         System.out.println();
         System.out.println("Sending:");
-        System.out.println(valsString);
+        System.out.println(pose);
 
-        broker.send(valsString);
+        broker.send(pose.toString());
     }
 }
