@@ -1,10 +1,9 @@
-import main.java.edu.calpoly.provided.*;
+package main.java.edu.calpoly;
+
+import edu.calpoly.provided.Broker;
 
 public class GatherRobot {
-    void main() {
-        RobotPose pose = new RobotPose(-1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0);
-        edu.calpoly.provided.Broker broker = new edu.calpoly.provided.Broker("localhost",5000);
-
+    public void sendData(Broker broker, RobotPose pose) {
         double[] vals = pose.getValues();
 
         System.out.println("Generated Robot Pose");
@@ -23,5 +22,12 @@ public class GatherRobot {
         System.out.println(pose);
 
         broker.send(pose.toString());
+    }
+
+    void main() {
+        RobotPose pose = new RobotPose(-1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0);
+        Broker broker = new Broker("localhost",5000);
+        GatherRobot robot = new GatherRobot();
+        robot.sendData(broker, pose);
     }
 }

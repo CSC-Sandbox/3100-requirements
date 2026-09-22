@@ -1,3 +1,5 @@
+package main.java.edu.calpoly;
+
 public class RobotPose {
     private double J1, J2, J3, J4, J5, J6, X, Y, Z;
     public RobotPose(double J1, double J2, double J3, double J4, double J5, double J6, double X, double Y, double Z) {
