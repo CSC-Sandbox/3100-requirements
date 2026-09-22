@@ -19,6 +19,9 @@ public class DisplayDataActivity {
         Broker broker = new Broker("localhost", 5000); // Creates a broker to received msg from the local services
         // NOW CONNECT TO THE ACTIVITYTRACKER
         ActivityTracker tracker = new ActivityTracker();
+
+        // ADD THE BEHAVIOR OF ACTIVITY DISPLAY
+        ActivityDisplay display = new ActivityDisplay();
         
         
 
@@ -53,6 +56,8 @@ public class DisplayDataActivity {
             // now call the ActivityTracker:
             tracker.recordTimestamp(msgType);
             System.out.println(msgType + " count: " + tracker.getRecentCount(msgType)); // TEMPORARY
+
+            //
 
             // SubTask #73(d): Classify the message to each source
             switch (msgType) {
