@@ -1,0 +1,74 @@
+name: Protect Story Assignments
+
+on:
+  issues:
+    types: [assigned, unassigned]
+
+permissions:
+  issues: write
+
+jobs:
+  protect-story-assignment:
+    # Instructor can always change assignments.
+    # Changes made by the Action itself are also ignored.
+    if: github.event.sender.login != 'javiergs' && github.event.sender.type != 'Bot'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Protect User Story assignment
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const action = context.payload.action;
+            const changedUser = context.payload.assignee?.login;
+
+            // Tasks are intentionally NOT protected.
+            const labels = issue.labels.map(label =>
+              typeof label === "string" ? label : label.name
+            );
+
+            if (labels.includes("Task")) {
+              console.log("Task detected. Assignment changes are allowed.");
+              return;
+            }
+
+            if (!changedUser) {
+              console.log("No changed assignee found.");
+              return;
+            }
+
+            console.log(
+              `Unauthorized ${action} of ${changedUser} by ${context.actor}`
+            );
+
+            if (action === "assigned") {
+              // Someone added an assignee to a Story -> remove them.
+              await github.rest.issues.removeAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                assignees: [changedUser]
+              });
+            }
+
+            if (action === "unassigned") {
+              // Someone removed an assignee from a Story -> restore them.
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                assignees: [changedUser]
+              });
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body:
+                "⚠️ **Story assignments are managed by the instructor.** " +
+                "Please do not change the assignee of a User Story. " +
+                "You may assign yourself to Tasks created under your Story."
+            });

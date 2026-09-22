@@ -1,0 +1,73 @@
+name: Propose a User Story
+description: Propose a new requirement for the system.
+title: "Story: "
+labels: ["story-proposed"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## User Story Proposal
+
+        Use this form to propose a requirement based on the product vision and customer needs.
+
+        **Title:** Provide a short, descriptive subject for the story.
+
+        A submitted story is a **proposal**. It may be discussed and revised before becoming part of the product backlog.
+
+  - type: textarea
+    id: story
+    attributes:
+      label: User Story
+      description: Describe the requirement from the perspective of a stakeholder.
+      placeholder: As a [stakeholder], I want [capability], so that [value or reason].
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: List observable and testable conditions that must be satisfied for the implemented story to be accepted.      
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this story from the stakeholder's perspective?
+      options:
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: estimation
+    attributes:
+      label: Estimation
+      description: Estimate the relative effort using a powers-of-two scale. Larger values represent greater effort and uncertainty.
+      options:
+        - "1"
+        - "2"
+        - "4"
+        - "8"
+        - "16"
+        - "32"
+        - "64"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / Notes
+      description: Provide any additional information that helps explain the requirement.
+      placeholder: Additional context, assumptions, related requirements, constraints, etc.
+    validations:
+      required: false
