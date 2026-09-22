@@ -1,0 +1,39 @@
+# Module 6 - Monitor Data Availability
+
+## Design
+
+`MonitorAvailability` is a Java Swing application that displays the availability of Robot, Gaze, Affect, and LiDAR data at the same time. The class extends `JFrame` and owns four status labels, one for each source.
+
+The application receives system messages through the course-provided `Broker`. It reads the message type from the text before the first comma and saves the current time for the matching source. A Swing `Timer` runs every 100 milliseconds and compares each saved time to the current time:
+
+- A source is **AVAILABLE** when its last received message was no more than one second ago.
+- A source is **UNAVAILABLE** when more than one second has passed without a message.
+
+The timer updates each label automatically, so a stopped source becomes unavailable even while messages from the other sources are still arriving.
+
+## How to Run
+
+From `src/main/java`, compile the monitor and the provided classes:
+
+```bash
+javac edu/calpoly/provided/Broker.java edu/calpoly/provided/TestMonitorData.java MonitorAvailability.java
+```
+
+Open two terminals in `src/main/java`.
+
+In the first terminal, start the provided data tester:
+
+```bash
+java edu.calpoly.provided.TestMonitorData
+```
+
+In the second terminal, start the monitor:
+
+```bash
+java MonitorAvailability
+```
+
+## Testing
+
+The provided tester initially sends messages from all four sources. The GUI should show all four as **AVAILABLE**. During the test, the tester temporarily stops one source at a time. That source should become **UNAVAILABLE** after one second, while the other three remain available. When the tester resumes the source, its label should return to **AVAILABLE**.
+
