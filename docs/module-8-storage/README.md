@@ -2,7 +2,7 @@
 
 ## Overview
 
-`StoreMessages` reads stored message records from a csv storage file and sends them to any given destination with a `Broker`.
+`StoreMessages` reads a datastream of message records from a `Broker` and sends them to any given destination with a CSV storage file.
 
 ## Implementation
 
