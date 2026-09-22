@@ -1,7 +1,9 @@
+import main.java.edu.calpoly.provided.*;
+
 public class GatherRobot {
     void main() {
         RobotPose pose = new RobotPose(-1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0);
-        Broker broker = new Broker("localhost",5000);
+        edu.calpoly.provided.Broker broker = new edu.calpoly.provided.Broker("localhost",5000);
 
         double[] vals = pose.getValues();
 
