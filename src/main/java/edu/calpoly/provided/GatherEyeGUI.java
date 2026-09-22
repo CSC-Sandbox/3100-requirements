@@ -11,7 +11,7 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class GatherEyeGUI {
+public class GatherEyeGUI extends JFrame {
 
 	private GatherEye receiver;
 
