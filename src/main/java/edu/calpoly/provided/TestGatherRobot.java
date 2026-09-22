@@ -1,4 +1,4 @@
-package edu.calpoly.provided;
+package main.java.edu.calpoly.provided;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/** Course-provided receiver used to test main.java.edu.calpoly.GatherRobot.java. */
+/** Course-provided receiver used to test GatherRobot.java. */
 public class TestGatherRobot {
     private static final int PORT = 5000;
 
