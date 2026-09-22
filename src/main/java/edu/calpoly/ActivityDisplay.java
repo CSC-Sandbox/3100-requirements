@@ -4,7 +4,6 @@ import javax.swing.JFrame; // we need the window
 import javax.swing.JPanel; // we need the container 
 import javax.swing.JLabel; // we need make it visible
 import java.awt.GridLayout; // we also need to place some layout using libraries
-import java.awt.Window;
 
 /**
  * DisplayDataActivity -> Must receives the messages adn also has the tracker included
@@ -61,6 +60,15 @@ public class ActivityDisplay {
 
         // set it visible
         frame.setVisible(true);
+    }
+
+    // FOR #76 I NEED TO ADD A METHOD THAT WILL BE PUBLIC TO COUNT OR UPDATE COUNTS
+    public void updateCounts(int robotCount, int gazeCount, int affectCount, int lidarCount) {
+        robotCountLabel.setText("Robot: " + robotCount + " messages");
+        gazeCountLabel.setText("Gaze: " + gazeCount + " messages");
+        affectCountLabel.setText("Affect: " + affectCount + " messages");
+        lidarCountLabel.setText("LiDAR: " + lidarCount + " messages");
+        
     }
 
     

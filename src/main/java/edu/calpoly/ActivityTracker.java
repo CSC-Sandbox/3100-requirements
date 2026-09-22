@@ -45,7 +45,7 @@ public class ActivityTracker {
     // a method that will then reiceved the source type -> current time recorded -> timestamp added to the source's queue
 
     //Store its arrival time() -> TASK #74(b).
-    public void recordTimestamp(String sourceType) {
+    public synchronized void recordTimestamp(String sourceType) { // HAVE TO MAKE IT SYNCHRONIZED FOR #76 TASK 
         long now = System.currentTimeMillis();
         
         switch (sourceType) {
@@ -83,7 +83,7 @@ public class ActivityTracker {
     
     //  Return the currentCount from that specific Source  -> #74(d) (COMBINE ALL THE ABOVE)
     // another method
-    public int getRecentCount(String sourceType) {
+    public synchronized int getRecentCount(String sourceType) {
 
         long now = System.currentTimeMillis();
 

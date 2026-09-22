@@ -11,6 +11,7 @@
 // SubTask #73(a): create the course-provided Broker Connection
 package edu.calpoly;
 import edu.calpoly.provided.Broker;
+import javax.swing.Timer;
 
 // SubTasl #73(b): Receive msg from the system
 
@@ -22,6 +23,19 @@ public class DisplayDataActivity {
 
         // ADD THE BEHAVIOR OF ACTIVITY DISPLAY
         ActivityDisplay display = new ActivityDisplay();
+
+        // FOR TASK #76,  ineed to add the timer (swinger)
+        Timer refreshTimer = new Timer(1000, event -> {
+            display.updateCounts(
+                tracker.getRecentCount("ROBOT"),
+                tracker.getRecentCount("GAZE"),
+                tracker.getRecentCount("AFFECT"),
+                tracker.getRecentCount("LIDAR") 
+            );
+
+        });
+
+        refreshTimer.start();
         
         
 
