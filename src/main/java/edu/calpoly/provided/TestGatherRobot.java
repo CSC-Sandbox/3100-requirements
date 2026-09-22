@@ -1,4 +1,4 @@
-package edu.calpoly.provided;
+package main.java.edu.calpoly.provided;
 
 import java.io.BufferedReader;
 import java.io.IOException;
