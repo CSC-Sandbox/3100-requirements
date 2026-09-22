@@ -1,5 +1,6 @@
 package edu.calpoly.chat;
 
+import edu.calpoly.provided.Broker;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.BorderFactory;
@@ -37,10 +38,30 @@ public class DisplayMessages extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    private void startReceiving() {
+        Broker broker = new Broker("localhost", 5000);
+        MessageReceiver receiver =
+                new MessageReceiver(broker, this::displayMessage);
+
+        Thread receiverThread = new Thread(receiver, "message-receiver");
+        receiverThread.setDaemon(true);
+        receiverThread.start();
+    }
+
+    private void displayMessage(String message) {
+        SwingUtilities.invokeLater(() -> {
+            messageArea.append(message + System.lineSeparator());
+            messageArea.setCaretPosition(
+                    messageArea.getDocument().getLength());
+            statusLabel.setText("Receiving messages...");
+        });
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             DisplayMessages application = new DisplayMessages();
             application.setVisible(true);
+            application.startReceiving();
         });
     }
 }
