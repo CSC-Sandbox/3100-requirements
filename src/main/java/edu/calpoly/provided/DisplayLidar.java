@@ -1,4 +1,4 @@
-// package edu.calpoly;
+package edu.calpoly;
 
 import java.awt.Color;
 import java.awt.Dimension;
