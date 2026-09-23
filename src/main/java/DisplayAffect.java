@@ -15,6 +15,12 @@ import org.jfree.data.xy.*;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Displays real time affects received as messages and plots them on a line chart.
+ *
+ * @author Evan Overman
+ * @version 1.0 (9-23-2026)
+ */
 public class DisplayAffect extends ApplicationFrame {
     private static final String CHART_NAME = "Affect Display";
     /** Maximum samples/width of x-axis to display at once */
