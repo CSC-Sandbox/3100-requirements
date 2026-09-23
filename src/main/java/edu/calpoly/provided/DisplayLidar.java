@@ -16,6 +16,9 @@ import javax.swing.SwingUtilities;
  *
  * Test: start edu.calpoly.provided.TestDisplayLidar first, then run this.
  * Run with --ascii to print the map in the terminal instead of a window.
+ *
+ * @author Marcus Hauen-Limkilde
+ * @version 1.0
  */
 public class DisplayLidar extends JPanel {
 
@@ -42,15 +45,17 @@ public class DisplayLidar extends JPanel {
     // Display
     private static final int CELL_SIZE_PX = 6;
 
-    // Occupied[row][col]; row 0 is the top of the map
+    /** The map: occupied[row][col], where row 0 is the top of the map. */
     private final boolean[][] occupied = new boolean[ROWS][COLS];
 
+    /** Sizes the panel to the grid and sets a white background. */
     public DisplayLidar() {
         setPreferredSize(new Dimension(COLS * CELL_SIZE_PX, ROWS * CELL_SIZE_PX));
         setBackground(Color.WHITE);
     }
 
-    // Parsing: returns {x, y, z}, or null if malformed
+    // Parses a LIDAR,X,Y,Z message into a 3D point, or returns null if the
+    // message is malformed or the coordinates are not finite.
     static double[] parseLidar(String message) {
         if (message == null) { return null; }
 
@@ -72,12 +77,13 @@ public class DisplayLidar extends JPanel {
         }
     }
 
-    // Grid
+    // Converts a world x coordinate to a grid column.
     static int worldToCol(double x) {
         return (int) Math.floor((x - ORIGIN_X) / RESOLUTION + EPSILON);
     }
 
-    // Flips y: larger world y -> smaller (higher on screen) row
+    // Converts a world y coordinate to a grid row, flipping the y axis so
+    // larger world y values map to higher rows on screen.
     static int worldToRow(double y) {
         int yIndex = (int) Math.floor((y - ORIGIN_Y) / RESOLUTION + EPSILON);
         return ROWS - 1 - yIndex;
@@ -87,7 +93,7 @@ public class DisplayLidar extends JPanel {
         return row >= 0 && row < ROWS && col >= 0 && col < COLS;
     }
 
-    //Marks the cell containing (x, y) as occupied
+    // Marks the cell containing the given world position as occupied.
     synchronized boolean markOccupied(double x, double y) {
         int row = worldToRow(y);
         int col = worldToCol(x);
@@ -97,7 +103,7 @@ public class DisplayLidar extends JPanel {
         occupied[row][col] = true;
         return true;
     }
-    // {can delete} For terminal debugging
+    // @return the number of cells currently marked occupied (debugging)
     synchronized int countOccupied() {
         int count = 0;
         for (boolean[] row : occupied) {
@@ -108,7 +114,7 @@ public class DisplayLidar extends JPanel {
         return count;
     }
 
-    // {can delete} For terminal debugging: '#' = occupied, '.' = free/unknown
+    // Renders the map as text for debugging.
     synchronized String toAscii() {
         StringBuilder sb = new StringBuilder((COLS + 1) * ROWS);
         for (int r = 0; r < ROWS; r++) {
@@ -120,7 +126,7 @@ public class DisplayLidar extends JPanel {
         return sb.toString();
     }
 
-    // Drawing
+    // Draws occupied cells as black squares and the sensor origin as a red dot.
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);   // clears the background
@@ -146,7 +152,10 @@ public class DisplayLidar extends JPanel {
              dotSize);
     }
 
-    // Receive loop + main
+    /**
+     * Receives LiDAR messages forever, marking each valid point on the map.
+     * Runs on a background thread because Broker.receive blocks.
+     */
     void runReceiveLoop(Broker broker, boolean asciiMode) {
         long received = 0;
         long rejected = 0;
@@ -188,6 +197,7 @@ public class DisplayLidar extends JPanel {
         }
     }
 
+    // Sleeps without throwing, keeping the retry delay out of the loop.
     private static void sleepQuietly(long ms) {
         try {
             Thread.sleep(ms);
@@ -196,6 +206,7 @@ public class DisplayLidar extends JPanel {
         }
     }
 
+    // Starts the map window and the background receive thread.
     public static void main(String[] args) {
         boolean asciiMode = args.length > 0 && args[0].equals("--ascii");
         Broker broker = new Broker(HOST, PORT);
