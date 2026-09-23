@@ -1,6 +1,6 @@
 # CSC 3100 — Software Engineering
 
-This repository contains the product backlog, course-provided infrastructure, and student implementations developed throughout the course.
+This repository contains the product backlog, course-provided infrastructure, design documentation, and student implementations developed throughout the course.
 
 ## Requirements
 
@@ -10,52 +10,73 @@ Each assigned Issue also contains the specific programming instructions, testing
 
 ## Repository Structure
 
+The repository evolves throughout the course as User Stories are implemented and merged.
+
 ```text
 3100-requirements/
 ├── README.md
 ├── pom.xml
-├── docs/
-│   └── ...
-└── src/
-    └── main/
-        └── java/
-            └── edu/
-                └── calpoly/
-                    ├── provided/
-                    │   ├── Broker.java
-                    │   ├── TestGatherRobot.java
-                    │   ├── TestDisplayRobot.java
-                    │   ├── TestGatherEye.java
-                    │   ├── TestDisplayEye.java
-                    │   ├── TestDisplayAffect.java
-                    │   ├── TestDisplayLidar.java
-                    │   ├── Encryption.java
-                    │   ├── TestEncryption.java
-                    │   ├── TestMessageValidator.java
-                    │   ├── TestEnterMessage.java
-                    │   ├── TestDisplayMessages.java
-                    │   ├── TestMonitorData.java
-                    │   ├── TestStoreMessages.java
-                    │   └── TestRetrieveMessages.java
-                    └── ...
 ├── data/
 │   ├── store-input.txt
 │   ├── messages.csv
 │   └── empty-messages.csv
+├── docs/
+│   ├── 13-gather-robot/
+│   ├── 34-gather-eye/
+│   ├── 40-display-affect/
+│   ├── module-4-security/
+│   ├── module-5-chat/
+│   ├── module-6-monitor/
+│   ├── module-7-storage/
+│   └── module-8-storage/
+└── src/
+    └── main/
+        └── java/
+            ├── ...
+            └── edu/
+                └── calpoly/
+                    ├── ...
+                    ├── messages/
+                    │   └── ...
+                    └── provided/
+                        ├── Broker.java
+                        ├── Encryption.java
+                        ├── TestGatherRobot.java
+                        ├── TestDisplayRobot.java
+                        ├── TestGatherEye.java
+                        ├── TestDisplayEye.java
+                        ├── TestDisplayAffect.java
+                        ├── TestDisplayLidar.java
+                        ├── TestEncryption.java
+                        ├── TestMessageValidator.java
+                        ├── TestEnterMessage.java
+                        ├── TestDisplayMessages.java
+                        ├── TestMonitorData.java
+                        ├── TestStoreMessages.java
+                        └── TestRetrieveMessages.java
 ```
 
-The package:
+Student implementations are added under:
+
+```text
+src/main/java/
+```
+
+As the system grows, related classes may be organized into packages under:
+
+```text
+edu.calpoly
+```
+
+Course-provided infrastructure is located under:
 
 ```text
 edu.calpoly.provided
 ```
 
-contains infrastructure supplied by the instructor.
+Students should **use the provided classes but should not modify them** unless specifically instructed.
 
-Students should **use these classes but should not modify them** unless specifically instructed.
-
-Additional provided classes may be added as the project evolves.
-
+Additional classes, packages, tests, and documentation directories will be added as the project evolves.
 
 ## Common Data Message Contract
 
@@ -92,6 +113,8 @@ Programming work begins from an assigned User Story.
 ```text
 User Story
     ↓
+Create Tasks as sub-issues
+    ↓
 Create a branch
     ↓
 Design with UML
@@ -103,6 +126,8 @@ Test
 Open a Pull Request
     ↓
 Instructor review
+    ↓
+Make corrections if requested
     ↓
 Merge
 ```
@@ -120,6 +145,8 @@ Your Pull Request should identify the User Story being implemented. For example:
 ```text
 Implement #13 Gather Robot Pose
 ```
+
+Once a Pull Request is approved and merged, that implementation becomes part of the shared codebase. Future work should build on the current `main` branch rather than replacing existing implementations.
 
 ## Provided Infrastructure
 
@@ -143,7 +170,23 @@ Depending on the assigned User Story, an application may send or receive data th
 
 The package also contains other course utilities when needed. For example, `Encryption` provides the encryption/decryption operations used by the security module.
 
-The details of what your program must send, receive, display, validate, or test are specified in your assigned GitHub Issue.
+The details of what your program must send, receive, display, validate, store, retrieve, or test are specified in your assigned GitHub Issue.
+
+## Student Implementations
+
+Student implementations are merged into the repository as User Stories are completed and approved.
+
+These classes become part of the evolving system and may be used by later User Stories.
+
+Before beginning new programming work:
+
+1. Make sure your local `main` branch is up to date.
+2. Review the existing classes and packages relevant to your User Story.
+3. Reuse existing implementations when appropriate.
+4. Do not duplicate functionality that already exists in the shared codebase.
+5. Create a new branch for your assigned work.
+
+The architecture and package structure may evolve as the individual User Stories are integrated into a larger system.
 
 ## Testing
 
@@ -175,14 +218,32 @@ Your assigned GitHub Issue identifies the test program to use and explains the e
 
 In general, start the provided test program first and leave it running, then run your implementation.
 
+Passing the provided test demonstrates the expected behavior for the assigned User Story. It does not prevent you from creating additional tests for your implementation.
+
 ## Documentation
 
-Design documentation for each User Story belongs under:
+Design documentation belongs under:
 
 ```text
 docs/
 ```
 
-Use the directory specified in your assigned GitHub Issue.
+Depending on the User Story or module, documentation may be organized by Story:
+
+```text
+docs/13-gather-robot/
+docs/34-gather-eye/
+```
+
+or by module:
+
+```text
+docs/module-5-chat/
+docs/module-7-storage/
+```
+
+Follow the directory specified in your assigned GitHub Issue.
+
+Design documentation should include the UML diagram and any additional documentation required by the User Story.
 
 Do **not** modify this repository's main `README.md` as part of your programming assignment.
