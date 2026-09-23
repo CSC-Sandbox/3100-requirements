@@ -6,8 +6,12 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-
-/** Course-provided receiver used to test EnterMessage.java. */
+/**
+ * Course-provided receiver used to test EnterMessage.java.
+ *
+ * @author Javier Gonzalez-Sanchez (javiergs)
+ * @version 1.0 (2026-09-01)
+ */
 public class TestEnterMessage {
 
   private static final int PORT = 5000;
