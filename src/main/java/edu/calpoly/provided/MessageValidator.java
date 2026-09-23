@@ -10,14 +10,11 @@ import java.util.Map;
 public class MessageValidator {
 
     public String validate(String rawInput) {
-        // Quick null guard
         if (rawInput == null) return "INVALID (Format)";
 
-        // Clean up leading/trailing whitespace before parsing
         String input = rawInput.trim();
         if (input.isEmpty()) return "INVALID (Format)";
 
-        // Format Detection: check if payload is wrapped as a JSON object
         if (input.startsWith("{") && input.endsWith("}")) {
             return validateJson(input);
         } else {
@@ -25,10 +22,8 @@ public class MessageValidator {
         }
     }
 
-
     // CSV VALIDATION PIPELINE
     private String validateCsv(String input) {
-        // Step 1: Tokenize by comma and trim each field
         String[] tokens = input.split(",");
         for (int i = 0; i < tokens.length; i++) {
             tokens[i] = tokens[i].trim();
@@ -36,50 +31,49 @@ public class MessageValidator {
 
         if (tokens.length == 0 || tokens[0].isEmpty()) return "INVALID (Format)";
 
-        // Extract the leading header type (e.g. GAZE, ROBOT, etc.)
         String type = tokens[0].toUpperCase();
 
         try {
             switch (type) {
                 case "GAZE":
-                    // Format: GAZE, X, Y -> Expecting exactly 3 tokens (header + 2 values)
+                    // Format: GAZE, X, Y -> 3 tokens total
                     if (tokens.length < 3) return "INVALID (Missing value)";
-                    if (tokens.length > 3) return "INVALID (Altering value)"; // Extra/trailing parameters injected
+                    if (tokens.length > 3) return "INVALID (Altering value)";
 
                     double gazeX = Double.parseDouble(tokens[1]);
                     double gazeY = Double.parseDouble(tokens[2]);
 
-                    // Whiteboard spec: 48 <= X <= 50 and 48 <= Y <= 50
-                    if (gazeX < 48.0 || gazeX > 50.0 || gazeY < 48.0 || gazeY > 50.0) {
+                    // Both X and Y must be in the range [0.0, 1.0]
+                    if (gazeX < 0.0 || gazeX > 1.0 || gazeY < 0.0 || gazeY > 1.0) {
                         return "INVALID (Range)";
                     }
                     return "VALID";
 
                 case "ROBOT":
-                    // Format: ROBOT, X, Y, Z -> Expecting 4 tokens total
-                    if (tokens.length < 4) return "INVALID (Missing value)";
-                    if (tokens.length > 4) return "INVALID (Altering value)";
+                    // Format: ROBOT, J1, J2, J3, J4, J5, J6, X, Y, Z -> 10 tokens total (header + 9 values)
+                    if (tokens.length < 10) return "INVALID (Missing value)";
+                    if (tokens.length > 10) return "INVALID (Altering value)";
 
-                    // Verify numeric conversions
-                    Double.parseDouble(tokens[1]);
-                    Double.parseDouble(tokens[2]);
-                    Double.parseDouble(tokens[3]);
+                    for (int i = 1; i <= 9; i++) {
+                        Double.parseDouble(tokens[i]);
+                    }
                     return "VALID";
 
                 case "AFFECT":
-                    // Format: AFFECT, Score -> Expecting 2 tokens total
-                    if (tokens.length < 2) return "INVALID (Missing value)";
-                    if (tokens.length > 2) return "INVALID (Altering value)";
+                    // Format: AFFECT, focus, excitement, engagement, interest, stress -> 6 tokens total
+                    if (tokens.length < 6) return "INVALID (Missing value)";
+                    if (tokens.length > 6) return "INVALID (Altering value)";
 
-                    double excitement = Double.parseDouble(tokens[1]);
-                    // Emotion/excitement metric must fall within standard [0.0, 1.0] bound
-                    if (excitement < 0.0 || excitement > 1.0) {
-                        return "INVALID (Range)";
+                    for (int i = 1; i <= 5; i++) {
+                        double val = Double.parseDouble(tokens[i]);
+                        if (val < 0.0 || val > 1.0) {
+                            return "INVALID (Range)";
+                        }
                     }
                     return "VALID";
 
                 case "LIDAR":
-                    // Format: LIDAR, X, Y, Z -> Expecting 4 tokens total
+                    // Format: LIDAR, X, Y, Z -> 4 tokens total
                     if (tokens.length < 4) return "INVALID (Missing value)";
                     if (tokens.length > 4) return "INVALID (Altering value)";
 
@@ -92,14 +86,12 @@ public class MessageValidator {
                     return "INVALID (Unknown Type)";
             }
         } catch (NumberFormatException e) {
-            // Fails if numeric string conversion hits unexpected non-digit characters
             return "INVALID (Format)";
         }
     }
 
     // JSON VALIDATION PIPELINE
     private String validateJson(String input) {
-        // Strip escaped quotes (e.g. \"type\") to prevent parsing errors on raw payloads
         String unescaped = input.replace("\\\"", "\"");
 
         Map<String, String> jsonMap = parseSimpleJson(unescaped);
@@ -118,28 +110,31 @@ public class MessageValidator {
                     double gazeX = Double.parseDouble(jsonMap.get("x"));
                     double gazeY = Double.parseDouble(jsonMap.get("y"));
 
-                    // Boundary check for gaze orientation coordinates
-                    if (gazeX < 48.0 || gazeX > 50.0 || gazeY < 48.0 || gazeY > 50.0) {
+                    if (gazeX < 0.0 || gazeX > 1.0 || gazeY < 0.0 || gazeY > 1.0) {
                         return "INVALID (Range)";
                     }
                     return "VALID";
 
                 case "ROBOT":
-                    if (!jsonMap.containsKey("x") || !jsonMap.containsKey("y") || !jsonMap.containsKey("z")) {
-                        return "INVALID (Missing value)";
+                    String[] robotKeys = {"j1", "j2", "j3", "j4", "j5", "j6", "x", "y", "z"};
+                    for (String key : robotKeys) {
+                        if (!jsonMap.containsKey(key)) {
+                            return "INVALID (Missing value)";
+                        }
+                        Double.parseDouble(jsonMap.get(key));
                     }
-                    Double.parseDouble(jsonMap.get("x"));
-                    Double.parseDouble(jsonMap.get("y"));
-                    Double.parseDouble(jsonMap.get("z"));
                     return "VALID";
 
                 case "AFFECT":
-                    if (!jsonMap.containsKey("excitement")) {
-                        return "INVALID (Missing value)";
-                    }
-                    double excitement = Double.parseDouble(jsonMap.get("excitement"));
-                    if (excitement < 0.0 || excitement > 1.0) {
-                        return "INVALID (Range)";
+                    String[] affectKeys = {"focus", "excitement", "engagement", "interest", "stress"};
+                    for (String key : affectKeys) {
+                        if (!jsonMap.containsKey(key)) {
+                            return "INVALID (Missing value)";
+                        }
+                        double val = Double.parseDouble(jsonMap.get(key));
+                        if (val < 0.0 || val > 1.0) {
+                            return "INVALID (Range)";
+                        }
                     }
                     return "VALID";
 
@@ -165,15 +160,14 @@ public class MessageValidator {
      */
     private Map<String, String> parseSimpleJson(String json) {
         Map<String, String> map = new HashMap<>();
-        
-        // Strip structural syntax characters
+
         String clean = json.replace("{", "").replace("}", "").replace("\"", "").trim();
         String[] pairs = clean.split(",");
 
         for (String pair : pairs) {
             String[] keyValue = pair.split(":");
             if (keyValue.length == 2) {
-                map.put(keyValue[0].trim(), keyValue[1].trim());
+                map.put(keyValue[0].trim().toLowerCase(), keyValue[1].trim());
             }
         }
         return map;
