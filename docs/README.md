@@ -1,25 +1,25 @@
-# EnterMessage
+# 06-Enter-Message
 
-`EnterMessage` is a Swing-based Java desktop application that provides a graphical user interface for entering and sending text messages across a network socket connection.
+`EnterMessage` is a Swing-based Java desktop application that provides a graphical user interface for typing and transmitting messages across a network socket connection.
 
 ## Overview
 
-The application presents a lightweight text editor window. Messages typed into the text area are trimmed and transmitted via a network `Broker` instance connected to `localhost:5000` when the user clicks the **Send** button.
+The application creates a client interface with a text area and a **Send** button. Entered messages are trimmed and sent via a network `Broker` instance connected to `localhost:5000`.
 
-## Features
+## Key Functionality
 
-* **Graphical User Interface:** Built using standard Java Swing (`JFrame`, `JTextArea`, `JButton`, `JScrollPane`).
-* **Network Integration:** Communicates with a local server or broker instance running on port `5000`.
-* **Input Handling:** Ignores empty messages and automatically clears the text box after transmission.
+- **GUI Interface:** Built using standard Java Swing (`JFrame`, `JTextArea`, `JButton`, `JScrollPane`).
+- **Network Transmission:** Sends non-empty text strings using `broker.send(message)`.
+- **Input Reset:** Automatically clears the input text box immediately after a message is transmitted.
 
-## Setup & Usage
+## Quick Start
 
-### Prerequisites
-* Java Development Kit (JDK) 8 or higher.
-* A running instance of `Broker` on `localhost:5000` listening for incoming socket transmissions.
+```java
+import edu.calpoly.provided.EnterMessage;
 
-### Execution
-
-1. Compile the source files:
-   ```bash
-   javac edu/calpoly/provided/EnterMessage.java
+public class Main {
+    public static void main(String[] args) {
+        // Launches the EnterMessage GUI on the Event Dispatch Thread
+        new EnterMessage();
+    }
+}
