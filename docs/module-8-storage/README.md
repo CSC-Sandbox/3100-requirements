@@ -57,7 +57,7 @@ java -cp target/classes edu.calpoly.provided.TestStoreMessages
 In a second terminal, run the storage program:
 
 ```bash
-java -cp target/classes edu.calpoly.provided.StoreMessages
+java -cp target/classes edu.calpoly.StoreMessages
 ```
 
 The tester listens on `localhost:5000`, receives the records, and compares them with `data/messages.csv`.

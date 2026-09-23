@@ -1,4 +1,6 @@
-package edu.calpoly.provided;
+package edu.calpoly;
+
+import edu.calpoly.provided.Broker;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

@@ -21,7 +21,7 @@ public class TestDisplayMessages {
         "How are you?",
         "CSC 3100",
         "Software Engineering",
-        "Testing the chat...",
+        "Testing the messages...",
         "Requirements become software.",
         "One message at a time.",
         "Message received!"

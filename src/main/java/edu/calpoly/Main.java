@@ -1,4 +1,4 @@
-package edu.calpoly.provided;
+package edu.calpoly;
 
 public class Main { 
 	public static void main(String[] args){ 

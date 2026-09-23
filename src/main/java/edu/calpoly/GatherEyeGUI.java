@@ -1,9 +1,8 @@
-package edu.calpoly.provided;
+package edu.calpoly;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import java.awt.Component;
 
 import java.awt.Color;
 import java.awt.Font;

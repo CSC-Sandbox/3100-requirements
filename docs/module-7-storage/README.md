@@ -57,7 +57,7 @@ java -cp target/classes edu.calpoly.provided.TestRetrieveMessages
 In a second terminal, run the retrieval program:
 
 ```bash
-java -cp target/classes edu.calpoly.provided.RetrieveMessages
+java -cp target/classes edu.calpoly.RetrieveMessages
 ```
 
 The tester listens on `localhost:5000`, receives the records, and compares them with `data/messages.csv`.

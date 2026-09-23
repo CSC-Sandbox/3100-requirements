@@ -1,4 +1,4 @@
-package edu.calpoly.chat;
+package edu.calpoly.messages;
 
 import edu.calpoly.provided.Broker;
 import java.util.function.Consumer;
