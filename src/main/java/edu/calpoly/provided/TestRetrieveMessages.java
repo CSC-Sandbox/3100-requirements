@@ -13,14 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Course-provided tester for Issue #7 — Retrieve Stored Messages.
+  * Course-provided test server that simulates a message retrieval service for testing RetrieveMessages.java.
  *
- * Start this tester first, then run the student's RetrieveMessages program.
- * The student reads data/messages.csv and sends each complete stored record
- * through Broker.send(). This tester receives those records and compares them
- * with the provided file exactly and in order.
+ * @author Javier Gonzalez-Sanchez (javiergs)
+ * @version 1.0 (2026-09-01)
  */
 public class TestRetrieveMessages {
+
     private static final int PORT = 5000;
     private static final Path DATA_FILE = Path.of("data", "messages.csv");
     private static final int ACCEPT_TIMEOUT_MS = 30_000;
