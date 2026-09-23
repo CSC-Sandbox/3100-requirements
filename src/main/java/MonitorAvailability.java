@@ -6,6 +6,19 @@ import java.awt.GridLayout;
 import javax.swing.Timer;
 import java.awt.Color;
 
+/**
+ * A GUI window that monitors the availability of Robot, Gaze, Affect,
+ * and LiDAR data sources.
+ *
+ * The class stores the most recent time valid data was received from
+ * each source. It uses these timestamps to determine whether a source is
+ * available or unavailable and updates the corresponding status labels.
+ *
+ * A source is considered unavailable if no valid data has been received
+ * for more than one second. When valid data is received again, its status
+ * returns to available.
+ */
+
 public class MonitorAvailability extends JFrame{
     private static volatile long robotLastReceived = 0;
     private static volatile long gazeLastReceived = 0;
