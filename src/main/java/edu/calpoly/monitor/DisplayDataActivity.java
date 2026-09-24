@@ -9,11 +9,25 @@
 */
 
 // SubTask #73(a): create the course-provided Broker Connection
-package edu.calpoly;
+package edu.calpoly.monitor;
 import edu.calpoly.provided.Broker;
 import javax.swing.Timer;
 
 // SubTasl #73(b): Receive msg from the system
+
+
+
+
+/**
+  * DisplayDataActivity is the main program that receives and 
+  * validates messages, 
+  * sends each source type to ActivityTracker, and 
+  * uses a repeating timer to update the ActivityDisplay GUI every second.
+  * @author Diego Martinez Parra (sp4msvwnz)
+  * @version version 1.0 (2026-09-23)
+  * ActivityDisplay
+  */
+
 
 public class DisplayDataActivity {
     public static void main(String[] args) {

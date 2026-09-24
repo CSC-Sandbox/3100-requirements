@@ -1,5 +1,5 @@
 // TASK #75: Create Java Swing ActivityDisplay
-package edu.calpoly;
+package edu.calpoly.monitor;
 import javax.swing.JFrame; // we need the window
 import javax.swing.JPanel; // we need the container 
 import javax.swing.JLabel; // we need make it visible
@@ -16,6 +16,22 @@ import java.awt.GridLayout; // we also need to place some layout using libraries
 
 
  // we do not need to create the main Constructor bc its gonna be a helper class
+
+
+ /**
+  * ActivityDisplay creates and manages the Swing window 
+  * that shows the current 60-second message counts for 
+  * - Robot, 
+  * -Gaze, 
+  * -Affect, and 
+  * -LiDAR, and 
+  * updates those labels when new counts are provided.
+  * @author Diego Martinez Parra (sp4msvwnz)
+  * @version version 1.0 (2026-09-23)
+  * ActivityDisplay
+  */
+
+ 
 public class ActivityDisplay {
     private final JFrame frame;
     

@@ -14,10 +14,18 @@
  * 
  */
 
-package edu.calpoly;
+package edu.calpoly.monitor;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+
+/**
+  * ActivityTracker records each message’s arrival time for its source
+  *  and returns how many messages from that source were received within the most recent 60 seconds.
+  * @author Diego Martinez Parra (sp4msvwnz)
+  * @version version 1.0 (2026-09-23)
+  * ActivityDisplay
+  */
 
 
 public class ActivityTracker {
