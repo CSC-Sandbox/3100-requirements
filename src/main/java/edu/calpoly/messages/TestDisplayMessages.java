@@ -1,4 +1,4 @@
-package edu.calpoly.provided;
+package edu.calpoly.messages;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Course-provided message simulator used to test DisplayMessages.java.
+ * Course-provided receiver used to test DisplayMessages.java. It simulates a message source by sending messages at random intervals to the DisplayMessages GUI.
  *
- * @author Javier Gonzalez-Sanchez (javiergs)
- * @version 1.0 (2026-09-01)
+ * @author Omar Coleman
  */
 public class TestDisplayMessages {
 

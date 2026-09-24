@@ -1,6 +1,8 @@
 package edu.calpoly.messages;
 
 import edu.calpoly.provided.Broker;
+import edu.calpoly.provided.MessageReceiver;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.BorderFactory;
@@ -10,6 +12,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+/**
+ * A simple GUI for displaying messages received from a message broker.
+ * @author Omar Coleman
+ */
+public class TestDisplayMessages {
 public class DisplayMessages extends JFrame {
     private final JTextArea messageArea;
     private final JLabel statusLabel;
