@@ -1,6 +1,4 @@
-package edu.calpoly;
-
-import edu.calpoly.provided.Broker;
+package edu.calpoly.messages;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,6 +8,15 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 
+import edu.calpoly.provided.Broker;
+
+
+/*
+* Connects to a Broker and uses it to receive messages and put them in a file.
+* 
+* @author Landon McCaslin
+* @version 1.0 (2026-09-23)
+**/
 public class StoreMessages {
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 5000;
