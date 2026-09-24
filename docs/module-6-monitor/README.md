@@ -51,4 +51,4 @@ Verified behavior:
 7) When a source resumes sending data, its count increases again.
 
 // UML
-docs/module-6-monitor/UML-SPRING-one.png
+docs/42-display-recent-data-activity/UML.png
