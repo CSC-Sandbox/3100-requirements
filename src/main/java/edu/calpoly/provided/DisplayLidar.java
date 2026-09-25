@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
  * Receives LIDAR,X,Y,Z messages through Broker, accumulates into a
  * 2D occupancy grid, and displays the grid in window.
  *
- * Test: start edu.calpoly.provided.TestDisplayLidar first, then run this.
+ * Test: start edu.calpoly.TestDisplayLidar first, then run this.
  * Run with --ascii to print the map in the terminal instead of a window.
  *
  * @author Marcus Hauen-Limkilde

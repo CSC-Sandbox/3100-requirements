@@ -1,13 +1,17 @@
-package edu.calpoly.provided;
+package edu.calpoly;
 
 import java.util.List;
 
 /**
  * Course-provided validation test cases for User Story #9.
- *
- * <p>The program prints representative valid and invalid CSV and JSON messages together with the
+ * <p>
+ * The program prints representative valid and invalid CSV and JSON messages together with the
  * expected result. Students can use these cases when exercising their MessageValidator class and
- * should add additional cases of their own.</p>
+ * should add additional cases of their own.
+ *
+ * @author Javier Gonzalez-Sanchez (javiergs)
+ * @version 1.0 (2026-09-01)
+ *
  */
 public class TestMessageValidator {
   private record TestCase(String description, String message, boolean expectedValid) {

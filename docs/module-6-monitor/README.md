@@ -24,7 +24,7 @@ Open two terminals in `src/main/java`.
 In the first terminal, start the provided data tester:
 
 ```bash
-java edu.calpoly.provided.TestMonitorData
+java edu.calpoly.TestMonitorData
 ```
 
 In the second terminal, start the monitor:

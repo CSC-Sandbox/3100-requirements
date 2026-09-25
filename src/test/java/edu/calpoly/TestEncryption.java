@@ -1,4 +1,6 @@
-package edu.calpoly.provided;
+package edu.calpoly;
+
+import edu.calpoly.provided.Encryption;
 
 /**
  * Course-provided demonstration and round-trip test for the Encryption utility.
