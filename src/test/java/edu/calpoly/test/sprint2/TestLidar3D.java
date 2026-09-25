@@ -14,19 +14,22 @@ import org.jzy3d.maths.Coord3d;
  * Expected student interface:
  *
  *   public static Coord3d toCoord3d(double x, double y, double z)
- *   public static Coord3d[] toPointCloud(double[][] lidarData)
  *
- * This program tests the data transformation used by the Jzy3d visualization.
- * The Swing/Jzy3d GUI is verified manually.
+ * The method may be placed in any class in the edu.calpoly package tree.
+ * Update IMPLEMENTATION_CLASS below to the class named in the issue/team design.
  *
  * This program intentionally uses main() rather than JUnit. JUnit will be
  * introduced in a later activity.
  *
  * @author Javier Gonzalez-Sanchez
- * @version 1.1
+ * @version 1.0
  */
 public class TestLidar3D {
 
+    /*
+     * Change this value only if the instructor specifies a different class
+     * for the Sprint 2 implementation.
+     */
     private static final String IMPLEMENTATION_CLASS =
             "edu.calpoly.visualization.Lidar3D";
 
@@ -39,8 +42,6 @@ public class TestLidar3D {
         testPoint(1.25, -2.50, 0.75);
         testPoint(0.0, 0.0, 0.0);
         testPoint(-4.0, 3.5, 2.0);
-
-        testPointCloud();
 
         System.out.println();
         System.out.println("Passed: " + passed);
@@ -83,57 +84,6 @@ public class TestLidar3D {
         } catch (NoSuchMethodException e) {
             fail("Missing public static method: "
                     + "toCoord3d(double, double, double)");
-        } catch (Exception e) {
-            fail("Unexpected error: " + e.getClass().getSimpleName()
-                    + " - " + e.getMessage());
-        }
-    }
-
-    private static void testPointCloud() {
-        double[][] lidarData = {
-                {1.0, 2.0, 3.0},
-                {-4.5, 0.0, 1.25},
-                {7.0, -8.0, 0.5}
-        };
-
-        try {
-            Class<?> clazz = Class.forName(IMPLEMENTATION_CLASS);
-            Method method = clazz.getMethod("toPointCloud", double[][].class);
-
-            if (!Modifier.isStatic(method.getModifiers())) {
-                fail("toPointCloud must be static");
-                return;
-            }
-
-            Object result = method.invoke(null, (Object) lidarData);
-
-            if (!(result instanceof Coord3d[])) {
-                fail("toPointCloud must return Coord3d[]");
-                return;
-            }
-
-            Coord3d[] points = (Coord3d[]) result;
-
-            if (points.length != lidarData.length) {
-                fail("Expected " + lidarData.length + " points but received "
-                        + points.length);
-                return;
-            }
-
-            for (int i = 0; i < lidarData.length; i++) {
-                if (!same(points[i].x, lidarData[i][0])
-                        || !same(points[i].y, lidarData[i][1])
-                        || !same(points[i].z, lidarData[i][2])) {
-                    fail("Point cloud coordinates are incorrect at index " + i);
-                    return;
-                }
-            }
-
-            pass("Multiple XYZ measurements converted to Coord3d[]");
-        } catch (ClassNotFoundException e) {
-            fail("Missing class " + IMPLEMENTATION_CLASS);
-        } catch (NoSuchMethodException e) {
-            fail("Missing public static method: toPointCloud(double[][])");
         } catch (Exception e) {
             fail("Unexpected error: " + e.getClass().getSimpleName()
                     + " - " + e.getMessage());

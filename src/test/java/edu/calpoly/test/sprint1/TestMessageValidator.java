@@ -1,4 +1,4 @@
-package edu.calpoly;
+package edu.calpoly.test.sprint1;
 
 import java.util.List;
 

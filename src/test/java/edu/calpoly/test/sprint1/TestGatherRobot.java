@@ -1,4 +1,4 @@
-package edu.calpoly;
+package edu.calpoly.test.sprint1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,30 +7,31 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Course-provided receiver used to test EnterMessage.java.
+ * Course-provided receiver used to test GatherRobot.java.
  *
  * @author Javier Gonzalez-Sanchez (javiergs)
  * @version 1.0 (2026-09-01)
  */
-public class TestEnterMessage {
+public class TestGatherRobot {
 
   private static final int PORT = 5000;
 
   public static void main(String[] args) {
-    System.out.println("TestEnterMessage running on localhost:" + PORT);
-    System.out.println("Run EnterMessage.java and send messages from the GUI.");
+    System.out.println("Waiting for robot pose data on localhost:" + PORT + "...");
+    System.out.println("Expected format: ROBOT,J1,J2,J3,J4,J5,J6,X,Y,Z");
 
     try (ServerSocket server = new ServerSocket(PORT)) {
       while (true) {
         try (Socket socket = server.accept();
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-
           String message = in.readLine();
           if (message != null) {
-            System.out.println("Received: " + message);
+            System.out.println("Robot Pose Received");
+            System.out.println(message);
+            if (!message.startsWith("ROBOT,")) {
+              System.out.println("WARNING: message should begin with ROBOT,");
+            }
           }
-        } catch (IOException e) {
-          System.out.println("Connection ended. Waiting for the next message...");
         }
       }
     } catch (IOException e) {

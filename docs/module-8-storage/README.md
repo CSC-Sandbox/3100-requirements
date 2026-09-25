@@ -51,7 +51,7 @@ mvn compile
 Start the provided storage tester first. From the project root, run:
 
 ```bash
-java -cp target/classes edu.calpoly.TestStoreMessages
+java -cp target/classes edu.calpoly.test.sprint1.TestStoreMessages
 ```
 
 In a second terminal, run the storage program:

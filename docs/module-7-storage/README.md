@@ -51,7 +51,7 @@ mvn compile
 Start the provided retrieval tester first. From the project root, run:
 
 ```bash
-java -cp target/classes edu.calpoly.TestRetrieveMessages
+java -cp target/classes edu.calpoly.test.sprint1.TestRetrieveMessages
 ```
 
 In a second terminal, run the retrieval program:
