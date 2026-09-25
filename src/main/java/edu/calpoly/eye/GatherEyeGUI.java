@@ -1,8 +1,9 @@
-package edu.calpoly;
+package edu.calpoly.provided;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import java.awt.Component;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,6 +11,17 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Temporary frontend for 'GatherEye' class -- Creates clickable GUI to broadcast X and Y coords
+ * All data handling of X and Y coordinates should be done with GatherEye
+ *
+ * // ONLY MEANT TO BE USED BY GATHEREYE CLASS // but gui can be manually opened via constructor
+ * (constructor needs a GatherEye class to send output)
+ *
+ * @author Marshall Ramsey (mars.rams)
+ * @version 1.0 (2026-09-26)
+ *
+ **/
 public class GatherEyeGUI {
 
 	private GatherEye receiver;

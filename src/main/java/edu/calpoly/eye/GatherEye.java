@@ -1,7 +1,14 @@
-package edu.calpoly;
+package edu.calpoly.provided;
 
-import edu.calpoly.provided.Broker;
-
+/**
+ * Broadcasts X and Y coordinates into message "GAZE,X,Y" format for use in CSV
+ *
+ * Currently receives X and Y coordinates from class GatherEyeGUI.java
+ *
+ * @author Marshall Ramsey (mars.rams)
+ * @version 1.0 (2026-09-26)
+ *
+ **/
 public class GatherEye {
 
 	// Most recent x and y coordinate.
