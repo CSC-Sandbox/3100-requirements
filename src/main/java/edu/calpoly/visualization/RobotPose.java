@@ -1,4 +1,11 @@
-package main.java.edu.calpoly;
+/**
+ * Represents robot pose data.
+ *
+ * @author Tobin Discoe (sipactivism)
+ * @version 1.0 (2026-09-23)
+ */
+
+package edu.calpoly.visualization;
 
 public class RobotPose {
     private double J1, J2, J3, J4, J5, J6, X, Y, Z;

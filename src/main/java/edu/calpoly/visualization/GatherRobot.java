@@ -1,4 +1,11 @@
-package main.java.edu.calpoly;
+/**
+ * Handles the gathering of robot pose data.
+ *
+ * @author Tobin Discoe (sipactivism)
+ * @version 1.0 (2026-09-23)
+ */
+
+package edu.calpoly.visualization;
 
 import edu.calpoly.provided.Broker;
 
