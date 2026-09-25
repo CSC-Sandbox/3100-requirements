@@ -37,3 +37,32 @@ java MonitorAvailability
 
 The provided tester initially sends messages from all four sources. The GUI should show all four as **AVAILABLE**. During the test, the tester temporarily stops one source at a time. That source should become **UNAVAILABLE** after one second, while the other three remain available. When the tester resumes the source, its label should return to **AVAILABLE**.
 
+## Class
+
+```java
+
+/**
+ * A GUI window that monitors the availability of Robot, Gaze, Affect,
+ * and LiDAR data sources.
+ *
+ * The class stores the most recent time valid data was received from
+ * each source. It uses these timestamps to determine whether a source is
+ * available or unavailable and updates the corresponding status labels.
+ *
+ * A source is considered unavailable if no valid data has been received
+ * for more than one second. When valid data is received again, its status
+ * returns to available.
+ */
+
+public class MonitorAvailability extends JFrame{
+    private static volatile long robotLastReceived = 0;
+    private static volatile long gazeLastReceived = 0;
+    private static volatile long affectLastReceived = 0;
+    private static volatile long lidarLastReceived = 0;
+
+    private JLabel robotLabel;
+    private JLabel gazeLabel;
+    private JLabel affectLabel;
+    private JLabel lidarLabel;
+
+```
