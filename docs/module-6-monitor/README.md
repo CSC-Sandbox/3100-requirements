@@ -1,54 +1,39 @@
-MODULE 6 - DISPLAY RECENT DATA ACTIVITY
+# Module 6 - Monitor Data Availability
 
-Overall
+## Design
 
-This program/first spring monitors recent message activity from four data sources:
-- ROBOT
-- GAZE
-- AFFECT
-- LiDAR
+`MonitorAvailability` is a Java Swing application that displays the availability of Robot, Gaze, Affect, and LiDAR data at the same time. The class extends `JFrame` and owns four status labels, one for each source.
 
-This program also displays the number of messages received from each source during the most recent 60 seconds. Again, the counts update automatically in a Java Swing Window.
+The application receives system messages through the course-provided `Broker`. It reads the message type from the text before the first comma and saves the current time for the matching source. A Swing `Timer` runs every 100 milliseconds and compares each saved time to the current time:
 
-In terms of the:
+- A source is **AVAILABLE** when its last received message was no more than one second ago.
+- A source is **UNAVAILABLE** when more than one second has passed without a message.
 
-DESIGN
+The timer updates each label automatically, so a stopped source becomes unavailable even while messages from the other sources are still arriving.
 
-The application uses three main classes
-- DisplayDataActivity: receives messages from the provided Broker, creating the tracker and the GUI, and starts the automatic refresh timer.
-- ActivityTracker: which stores message timestamps separately for ROBOT, GAZE, AFFECT and LiDAR. Moroever, it also removes the timestamps older than 60 seconds and returns the current count for each of the desired source.
-- ActivityDisplay: which creates the Java Swing widnow and updates the four displayed count labels
+## How to Run
 
-MESSAAGES use the format:
+From `src/main/java`, compile the monitor and the provided classes:
 
-TYPE, data ... and so on
+```bash
+javac edu/calpoly/provided/Broker.java edu/calpoly/provided/TestMonitorData.java MonitorAvailability.java
+```
 
+Open two terminals in `src/main/java`.
 
-HOW TO RUN:
+In the first terminal, start the provided data tester:
 
-1. Build the project
-~ mvn compile
+```bash
+java edu.calpoly.provided.TestMonitorData
+```
 
-2. Run the provided data simulator, TestMonitorData.java
-(leave it running)
+In the second terminal, start the monitor:
 
-3. Run DisplayDataActivity.java
+```bash
+java MonitorAvailability
+```
 
-and then Run Java: Start TestMonitorData, and then DisplayDataActivity
+## Testing
 
-LocalHost: 5000;
+The provided tester initially sends messages from all four sources. The GUI should show all four as **AVAILABLE**. During the test, the tester temporarily stops one source at a time. That source should become **UNAVAILABLE** after one second, while the other three remain available. When the tester resumes the source, its label should return to **AVAILABLE**.
 
-TESTING
-
-Verified behavior:
-
-1) Robot, Gaze, Affect, and LiDAR messages are counted separately.
-2) Different source rates produce different displayed counts.
-3) New messages increase the appropriate source count.
-4) Counts refresh automatically without user interaction.
-5) The application continues working while message types are interleaved.
-6) When a source stops producing data, its count decreases as messages become older than 60 seconds.
-7) When a source resumes sending data, its count increases again.
-
-// UML
-docs/42-display-recent-data-activity/UML.png

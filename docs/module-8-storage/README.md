@@ -1,18 +1,18 @@
-# Module 7: Storage and Message Retrieval
+# Module 8: Storage
 
 ## Overview
 
-`RetrieveMessages` reads stored message records from a csv storage file and sends them to any given destination with a `Broker`.
+`StoreMessages` reads a datastream of message records from a `Broker` and sends them to any given destination with a CSV storage file.
 
 ## Implementation
 
 The class is located at:
 
 ```text
-src/main/java/edu/calpoly/provided/RetrieveMessages.java
+src/main/java/edu/calpoly/provided/StoreMessages.java
 ```
 
-`RetrieveMessages` is configured with:
+`StoreMessages` is configured with:
 
 - A `Path` identifying the storage file.
 - a host (`string`) to send messages to.
@@ -26,17 +26,17 @@ Host: localhost
 Port: 5000
 ```
 
-The constructor makes the storage path, destination host, and port configurable for other callers and tests.
+By default, the class will be configured to run on localhost 5000 to match the broker. Can be constructed to run with any host.
 
-## Retrieval Behavior
+## Storage Behavior
 
 When the program starts, it:
 
-1. Reads `data/messages.csv` using UTF-8.
-2. Filters out blank lines.
-3. Reports an error if the storage file is missing or cannot be read.
-4. Reports `No messages to retrieve.` when no records are available.
-5. Sends every remaining record through `Broker.send()` in file order.
+1. Opens data/messages.csv using UTF-8, creating the file and parent directory if necessary.
+2. Receives messages through Broker.receive().
+3. Associates an ISO-8601 timestamp with each received message.
+4. Appends each timestamp and unchanged message to the file in receive order.
+5. Flushes each record immediately and stops when the sender closes the connection.
 
 Each record is sent as a single line and in the same order that they were stored in. The stored CSV content is not parsed or modified, so commas and the original record format are preserved.
 
@@ -48,23 +48,23 @@ Compile the project with Maven:
 mvn compile
 ```
 
-Start the provided retrieval tester first. From the project root, run:
+Start the provided storage tester first. From the project root, run:
 
 ```bash
-java -cp target/classes edu.calpoly.provided.TestRetrieveMessages
+java -cp target/classes edu.calpoly.provided.TestStoreMessages
 ```
 
-In a second terminal, run the retrieval program:
+In a second terminal, run the storage program:
 
 ```bash
-java -cp target/classes edu.calpoly.RetrieveMessages
+java -cp target/classes edu.calpoly.StoreMessages
 ```
 
 The tester listens on `localhost:5000`, receives the records, and compares them with `data/messages.csv`.
 
 ## Expected Result
 
-For the supplied `data/messages.csv`, the tester should receive five records in this order:
+For the supplied `data/messages.csv`, the tester should write five records in this order:
 
 ```text
 2026-09-14T10:00:01,Hello from CSC 3100

@@ -1,4 +1,6 @@
-package edu.calpoly.provided;
+package edu.calpoly.storage;
+
+import edu.calpoly.provided.Broker;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -6,6 +8,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for retrieving messages from storage and sending them through a Broker.
+ * 
+ * @author Anay Nagar (ReeledWarrior14)
+ * @version 1.0 (9/23/2026)
+ */
 public class RetrieveMessages {
     private static final int DEFAULT_PORT = 5000;
     private static final String DEFAULT_HOST = "localhost";

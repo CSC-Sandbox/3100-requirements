@@ -1,0 +1,1 @@
+I decided to use a while loop to make sure that the user could use the encryption on their messages and then they could exit by typing exit at any point, and then I just called the encryption method.
