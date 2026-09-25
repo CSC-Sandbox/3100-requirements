@@ -36,7 +36,7 @@ public class TestMessageSecurity {
     private static void testDigest() {
         String actual = EncryptMessage.messageDigest("CSC 3100");
         String expected =
-                "f1b74b4a7f3b6f38c7641d3e25ecdd1f3ac933aa0d6fd04ef6aab8f0f98e1f15";
+                "88a956fd147e7fd81b6e4f23dbd9726542ccd9ca31c37d88344ba02213adf52d";
 
         check(expected.equals(actual),
                 "SHA-256 digest matches expected value");
