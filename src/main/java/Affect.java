@@ -1,5 +1,12 @@
 import java.security.InvalidParameterException;
 
+/**
+ * Holds a single user affect and includes functions to parse this class from a
+ * `String` and create a new `String` from it.
+ *
+ * @author Evan Overman
+ * @version 1.0 (9-23-2026)
+ */
 public class Affect {
     private final double focus;
     private final double excitement;
