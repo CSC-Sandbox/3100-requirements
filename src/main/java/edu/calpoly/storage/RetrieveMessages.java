@@ -8,6 +8,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
 /**
  * This class is responsible for retrieving messages from storage and sending them through a Broker.
  * 
@@ -30,7 +36,7 @@ public class RetrieveMessages {
         this.port = port;
     }
 
-    public static void main(String[] args) {        
+    public static void main(String[] args) {
         RetrieveMessages retriever = new RetrieveMessages(DEFAULT_DATA_FILE, DEFAULT_HOST, DEFAULT_PORT);
         retriever.readFile();
 
@@ -43,17 +49,9 @@ public class RetrieveMessages {
     }
 
     private void readFile() {
-        if (!Files.exists(dataFile)) {
-            System.err.println("Missing Storage File: " + dataFile.toAbsolutePath());
-            return;
-        }
-
         try {
-            messages = Files.readAllLines(dataFile, StandardCharsets.UTF_8)
-                    .stream()
-                    .filter(line -> !line.isBlank())
-                    .toList();
-        } catch (Exception e) {
+            messages = readMessages(dataFile);
+        } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
         }
     }
@@ -68,5 +66,29 @@ public class RetrieveMessages {
         } catch (Exception e) {
             System.err.println("Error sending messages: " + e.getMessage());
         }
+    }
+
+    public static List<String> readMessages(Path file)
+            throws IOException {
+
+        List<String> result = new ArrayList<>();
+
+        if (!Files.exists(file)) {
+            return result;
+        }
+
+        try (BufferedReader reader = Files.newBufferedReader(
+                file, StandardCharsets.UTF_8)) {
+
+            Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(reader);
+
+            for (CSVRecord record : records) {
+                if (record.size() >= 2) {
+                    result.add(record.get(1));
+                }
+            }
+        }
+
+        return result;
     }
 }
