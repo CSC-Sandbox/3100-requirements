@@ -44,6 +44,8 @@ public class ActivityDisplay {
 
     private final JLabel lidarCountLabel = new JLabel("LiDAR: 0 Messages"); // LIDAR
 
+    private final JLabel systemStateLabel = new JLabel("System State: NO_ACTIVITY");
+
     // EXTRA
 
     private final JLabel timeWindowLabel = new JLabel("Last 60 Seconds"); // to display more UI
@@ -64,6 +66,7 @@ public class ActivityDisplay {
         panel.add(gazeCountLabel);
         panel.add(affectCountLabel);
         panel.add(lidarCountLabel);
+        panel.add(systemStateLabel);
         frame.add(panel);
         // we have to tell them to close the application
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // when the user closes the window
@@ -87,5 +90,7 @@ public class ActivityDisplay {
         
     }
 
-    
+    public void updateSystemState(String state) {
+     systemStateLabel.setText("System State: " + state);
+    }
 }
