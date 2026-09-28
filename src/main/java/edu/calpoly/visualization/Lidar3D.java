@@ -17,12 +17,12 @@ import org.jzy3d.maths.Coord3d;
 public class Lidar3D {
     private final List<Coord3d> points = new ArrayList<>();
 
-    // Converts one LiDAR measurement (x, y, z in meters) into a Jzy3d Coord3d
+    /** Converts one LiDAR measurement (x, y, z in meters) into a Jzy3d Coord3d */
     public static Coord3d toCoord3d(double x, double y, double z) {
         return new Coord3d(x,y,z);
     }
     
-    // Converts rows of {x, y, z} into a point cloud, skipping null or short rows
+    /** Converts rows of {x, y, z} into a point cloud, skipping null or short rows */
     public static Coord3d[] toPointCloud(double[][] lidarData) { 
         if(lidarData == null) { 
             return new Coord3d[0]; 
@@ -41,17 +41,17 @@ public class Lidar3D {
         return pointCloud.toArray(new Coord3d[0]);
     }
 
-    // Adds one measurement to the accumulated point cloud
+    /** Adds one measurement to the accumulated point cloud */
     public synchronized void addPoint(double x, double y, double z) {
         points.add(toCoord3d(x, y, z));
     }
 
-    // Returns a copy of the accumulated points, safe to read while more arrive
+    /** Returns a copy of the accumulated points, safe to read while more arrive */
     public synchronized List<Coord3d> getPoints() {
         return new ArrayList<>(points);
     }
 
-    // Returns how many measurements have been accumulated so far.
+    /** Returns how many measurements have been accumulated so far */
     public synchronized int size() {
         return points.size();
     }
