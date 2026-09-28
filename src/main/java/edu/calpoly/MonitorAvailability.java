@@ -17,6 +17,9 @@ import java.awt.Color;
  * A source is considered unavailable if no valid data has been received
  * for more than one second. When valid data is received again, its status
  * returns to available.
+ * 
+ * @author tphan56
+ * @version 1.0
  */
 
 public class MonitorAvailability extends JFrame{
