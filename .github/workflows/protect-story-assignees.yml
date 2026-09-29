@@ -1,4 +1,4 @@
-name: Protect Feature Assignments
+name: Protect Story Assignments
 
 on:
   issues:
@@ -8,7 +8,7 @@ permissions:
   issues: write
 
 jobs:
-  protect-feature-assignment:
+  protect-story-assignment:
     # Instructor can always change assignments.
     # Ignore changes made by bots, including this Action.
     if: >
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Protect Feature assignment
+      - name: Protect assignments
         uses: actions/github-script@v8
         with:
           script: |
@@ -26,32 +26,48 @@ jobs:
             const action = context.payload.action;
             const changedUser = context.payload.assignee?.login;
 
-            // GitHub Issue Type
+            // Read labels.
+            const labels = (issue.labels || []).map(label =>
+              typeof label === "string" ? label : label.name
+            );
+
+            // Read GitHub Issue Type, if available in the event.
             const issueType = issue.type?.name;
 
             console.log(
-              `Issue #${issue.number}: type=${issueType}, action=${action}`
+              `Issue #${issue.number}: type=${issueType}, labels=${labels.join(", ")}`
             );
 
-            // ONLY Features are protected.
-            // Tasks and all other issue types may change assignees freely.
-            if (issueType !== "Feature") {
+            // -------------------------------------------------------
+            // TASKS ARE THE ONLY EXCEPTION.
+            // Allow assignment changes if:
+            //   1. Issue Type is Task, OR
+            //   2. The issue has the Task label.
+            // -------------------------------------------------------
+            const isTask =
+              issueType === "Task" ||
+              labels.includes("Task");
+
+            if (isTask) {
               console.log(
-                `Issue type is ${issueType}. Assignment changes are allowed.`
+                "Task detected. Assignment change is allowed."
               );
               return;
             }
 
+            // -------------------------------------------------------
+            // EVERYTHING ELSE IS PROTECTED.
+            // -------------------------------------------------------
             if (!changedUser) {
               console.log("No changed assignee found.");
               return;
             }
 
             console.log(
-              `Unauthorized ${action} of ${changedUser} on Feature #${issue.number} by ${context.actor}`
+              `Unauthorized ${action} of ${changedUser} by ${context.actor}`
             );
 
-            // Student added an assignee to a Feature -> undo it.
+            // Someone added an assignee -> remove them.
             if (action === "assigned") {
               await github.rest.issues.removeAssignees({
                 owner: context.repo.owner,
@@ -61,7 +77,7 @@ jobs:
               });
             }
 
-            // Student removed an assignee from a Feature -> restore it.
+            // Someone removed an assignee -> restore them.
             if (action === "unassigned") {
               await github.rest.issues.addAssignees({
                 owner: context.repo.owner,
@@ -76,7 +92,7 @@ jobs:
               repo: context.repo.repo,
               issue_number: issue.number,
               body:
-                "⚠️ **Feature assignments are managed by the instructor.** " +
-                "Please do not change the assignee of a Feature. " +
-                "Assignment changes on Tasks are allowed."
+                "⚠️ **Story assignments are managed by the instructor.** " +
+                "Please do not change the assignee of a Story. " +
+                "Assignment changes are allowed only on Tasks."
             });
