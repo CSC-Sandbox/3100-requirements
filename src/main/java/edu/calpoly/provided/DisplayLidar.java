@@ -1,5 +1,5 @@
 package edu.calpoly.provided;
-
+import java.awt.BorderLayout; // Added for #191 purposes 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,6 +7,9 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import org.jzy3d.maths.Coord3d;
+import edu.calpoly.visualization.Lidar3DPanel;
 
 /**
  * User Story #35 -- Create Map from LiDAR Data.
@@ -211,6 +214,19 @@ public class DisplayLidar extends JPanel {
         boolean asciiMode = args.length > 0 && args[0].equals("--ascii");
         Broker broker = new Broker(HOST, PORT);
         DisplayLidar map = new DisplayLidar();
+        JPanel container = new JPanel(new BorderLayout()); // THis line supports #191 task, but also creates this composition idea
+        container.add(map, BorderLayout.WEST);
+        // Empty point
+        Coord3d[] points = new Coord3d[0];
+        Lidar3DPanel panel3D = new Lidar3DPanel(points); // creates the objkect that takes points
+        container.add(panel3D, BorderLayout.CENTER); // Lets center the chart
+
+        //layout might change, therefore must recalculate layout
+        container.revalidate();
+        // visuals changed, therefore it has to be drawn again
+        container.repaint();
+
+
 
         if (asciiMode) { // {can delete} For terminal debugging
             map.runReceiveLoop(broker, true);
@@ -221,7 +237,7 @@ public class DisplayLidar extends JPanel {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("LiDAR Map");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.add(map);
+            frame.add(container); // no mapping anymore, but containing the 3D structure and
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
