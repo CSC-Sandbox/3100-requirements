@@ -16,9 +16,17 @@ jobs:
           REPO: ${{ github.event.repository.name }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TYPE: ${{ github.event.issue.type.name }}
         shell: bash
         run: |
           set -euo pipefail
+
+          # This workflow is for Stories/Features created from the issue form.
+          # Student Tasks and other ordinary issues should not be treated as errors.
+          if [[ "$ISSUE_TYPE" == "Task" ]]; then
+            echo "Task detected; story fields do not apply."
+            exit 0
+          fi
 
           BODY=$(printf '%s\n' "$ISSUE_BODY" | tr -d '\r')
 
@@ -47,9 +55,11 @@ jobs:
           echo "Priority: $PRIORITY"
           echo "Estimate: $ESTIMATE"
 
+          # Issues that were not created from the Story form do not have these
+          # headings. Skip them successfully instead of generating a failed run.
           if [[ -z "$PRIORITY" || -z "$ESTIMATE" ]]; then
-            echo "Could not read Priority or Estimation from the issue."
-            exit 1
+            echo "Priority/Estimation not present; nothing to synchronize."
+            exit 0
           fi
 
           FIELDS=$(gh api \
