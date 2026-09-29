@@ -44,8 +44,7 @@ public class ActivityDisplay {
 
     private final JLabel lidarCountLabel = new JLabel("LiDAR: 0 Messages"); // LIDAR
 
-     private final JLabel systemStateLabel = new JLabel("System State: NO_ACTIVITY");
-
+    private final JLabel systemStateLabel = new JLabel("System State: NO_ACTIVITY");
 
     // EXTRA
 
@@ -56,7 +55,7 @@ public class ActivityDisplay {
     public ActivityDisplay() {
         frame = new JFrame("Recent Data Activity");
 
-        int rows = 6;
+        int rows = 5;
         int columns = 1;
         
         // Create a panel
@@ -91,9 +90,7 @@ public class ActivityDisplay {
         
     }
 
-     public void updateSystemState(String state) {
-         systemStateLabel.setText("System State: " + state);
-     }
-
-    
+    public void updateSystemState(String state) {
+     systemStateLabel.setText("System State: " + state);
+    }
 }

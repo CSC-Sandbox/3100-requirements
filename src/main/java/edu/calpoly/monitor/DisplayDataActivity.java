@@ -132,7 +132,22 @@ public class DisplayDataActivity {
                     break;
             }
 
-            
+            int totalCount =
+                    tracker.getRecentCount("ROBOT")
+                            + tracker.getRecentCount("GAZE")
+                            + tracker.getRecentCount("AFFECT")
+                            + tracker.getRecentCount("LIDAR");
+
+            double messageRate = totalCount / 60.0;
+
+            double secondsSinceLastMessage =
+                    totalCount > 0 ? 0.0 : 60.0;
+
+            String state = ActivityClassifier.classify(
+                    messageRate,
+                    secondsSinceLastMessage);
+
+            display.updateSystemState(state);
 
             // then display the msg
             System.out.println("Received: " + msg); //concadination
