@@ -1,6 +1,5 @@
-# CSC 3100 — Software Engineering
 
-This repository is the shared development repository for **CSC 3100: Software Engineering**.
+Shared repository for **CSC 3100: Software Engineering**.
 
 We use GitHub as our development hub to connect **requirements, implementation, testing, documentation, and code review**.
 
