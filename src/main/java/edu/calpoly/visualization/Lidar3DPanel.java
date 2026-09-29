@@ -39,6 +39,10 @@ public class Lidar3DPanel extends JPanel { //is a typed JPanel: inheritance so l
 
         chart.add(scatter); //adds the scatter object to  the graph
 
+        // #192: enables the mouse interaction with the 3D Camera
+        chart.addMouseCameraController();
+
+
         Component canvas = (Component)chart.getCanvas(); // Does this return ICanvas? Yes, casting plays a big role to return from and Obkect to the actual obkect
 
         this.add(canvas); // therefore Panel becomes teh container, and canvas the child
