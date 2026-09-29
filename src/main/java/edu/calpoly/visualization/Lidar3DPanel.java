@@ -28,14 +28,31 @@ import java.awt.Component; // AWT
 public class Lidar3DPanel extends JPanel { //is a typed JPanel: inheritance so lidar3DPanel (child) -> JPanel (parent)
     
     private static final long serialVersionUID = 1l; // swing component
+    
+    // TASK 193 part/component
+    private final Scatter scatter;
+    private final AWTChart chart;
+
+    // constructor
+
+    public void updatePoints(Coord3d[] points) {
+
+        scatter.setData(points);
+        chart.getView().updateBounds();
+        chart.render();
+
+    }
+
 
     public Lidar3DPanel(Coord3d[] points) { // constructor from the second library
+
         //create the 3D Scatter object
-        Scatter scatter = new Scatter(points); //drawable representations of points
+        scatter = new Scatter(points); //drawable representations of points
+
 
         EmulGLChartFactory factory = new EmulGLChartFactory(); // constructs what kind of chart object
 
-        AWTChart chart = factory.newChart(); // therefore since call a methods and the return must be AWTChart
+        chart = factory.newChart(); // therefore since call a methods and the return must be AWTChart
 
         chart.add(scatter); //adds the scatter object to  the graph
 
