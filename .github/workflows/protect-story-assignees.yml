@@ -10,13 +10,15 @@ permissions:
 jobs:
   protect-story-assignment:
     # Instructor can always change assignments.
-    # Changes made by the Action itself are also ignored.
-    if: github.event.sender.login != 'javiergs' && github.event.sender.type != 'Bot'
+    # Ignore changes made by bots, including this Action.
+    if: >
+      github.event.sender.login != 'javiergs' &&
+      github.event.sender.type != 'Bot'
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Protect User Story assignment
+      - name: Protect assignments
         uses: actions/github-script@v8
         with:
           script: |
@@ -24,16 +26,38 @@ jobs:
             const action = context.payload.action;
             const changedUser = context.payload.assignee?.login;
 
-            // Tasks are intentionally NOT protected.
-            const labels = issue.labels.map(label =>
+            // Read labels.
+            const labels = (issue.labels || []).map(label =>
               typeof label === "string" ? label : label.name
             );
 
-            if (labels.includes("Task")) {
-              console.log("Task detected. Assignment changes are allowed.");
+            // Read GitHub Issue Type, if available in the event.
+            const issueType = issue.type?.name;
+
+            console.log(
+              `Issue #${issue.number}: type=${issueType}, labels=${labels.join(", ")}`
+            );
+
+            // -------------------------------------------------------
+            // TASKS ARE THE ONLY EXCEPTION.
+            // Allow assignment changes if:
+            //   1. Issue Type is Task, OR
+            //   2. The issue has the Task label.
+            // -------------------------------------------------------
+            const isTask =
+              issueType === "Task" ||
+              labels.includes("Task");
+
+            if (isTask) {
+              console.log(
+                "Task detected. Assignment change is allowed."
+              );
               return;
             }
 
+            // -------------------------------------------------------
+            // EVERYTHING ELSE IS PROTECTED.
+            // -------------------------------------------------------
             if (!changedUser) {
               console.log("No changed assignee found.");
               return;
@@ -43,8 +67,8 @@ jobs:
               `Unauthorized ${action} of ${changedUser} by ${context.actor}`
             );
 
+            // Someone added an assignee -> remove them.
             if (action === "assigned") {
-              // Someone added an assignee to a Story -> remove them.
               await github.rest.issues.removeAssignees({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -53,8 +77,8 @@ jobs:
               });
             }
 
+            // Someone removed an assignee -> restore them.
             if (action === "unassigned") {
-              // Someone removed an assignee from a Story -> restore them.
               await github.rest.issues.addAssignees({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -69,6 +93,6 @@ jobs:
               issue_number: issue.number,
               body:
                 "⚠️ **Story assignments are managed by the instructor.** " +
-                "Please do not change the assignee of a User Story. " +
-                "You may assign yourself to Tasks created under your Story."
+                "Please do not change the assignee of a Story. " +
+                "Assignment changes are allowed only on Tasks."
             });
