@@ -1,4 +1,4 @@
-name: Protect Story Assignments
+name: Protect Feature Assignments
 
 on:
   issues:
@@ -8,15 +8,17 @@ permissions:
   issues: write
 
 jobs:
-  protect-story-assignment:
+  protect-feature-assignment:
     # Instructor can always change assignments.
-    # Changes made by the Action itself are also ignored.
-    if: github.event.sender.login != 'javiergs' && github.event.sender.type != 'Bot'
+    # Ignore changes made by bots, including this Action.
+    if: >
+      github.event.sender.login != 'javiergs' &&
+      github.event.sender.type != 'Bot'
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Protect User Story assignment
+      - name: Protect Feature assignment
         uses: actions/github-script@v8
         with:
           script: |
@@ -24,13 +26,19 @@ jobs:
             const action = context.payload.action;
             const changedUser = context.payload.assignee?.login;
 
-            // Tasks are intentionally NOT protected.
-            const labels = issue.labels.map(label =>
-              typeof label === "string" ? label : label.name
+            // GitHub Issue Type
+            const issueType = issue.type?.name;
+
+            console.log(
+              `Issue #${issue.number}: type=${issueType}, action=${action}`
             );
 
-            if (labels.includes("Task")) {
-              console.log("Task detected. Assignment changes are allowed.");
+            // ONLY Features are protected.
+            // Tasks and all other issue types may change assignees freely.
+            if (issueType !== "Feature") {
+              console.log(
+                `Issue type is ${issueType}. Assignment changes are allowed.`
+              );
               return;
             }
 
@@ -40,11 +48,11 @@ jobs:
             }
 
             console.log(
-              `Unauthorized ${action} of ${changedUser} by ${context.actor}`
+              `Unauthorized ${action} of ${changedUser} on Feature #${issue.number} by ${context.actor}`
             );
 
+            // Student added an assignee to a Feature -> undo it.
             if (action === "assigned") {
-              // Someone added an assignee to a Story -> remove them.
               await github.rest.issues.removeAssignees({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -53,8 +61,8 @@ jobs:
               });
             }
 
+            // Student removed an assignee from a Feature -> restore it.
             if (action === "unassigned") {
-              // Someone removed an assignee from a Story -> restore them.
               await github.rest.issues.addAssignees({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -68,7 +76,7 @@ jobs:
               repo: context.repo.repo,
               issue_number: issue.number,
               body:
-                "⚠️ **Story assignments are managed by the instructor.** " +
-                "Please do not change the assignee of a User Story. " +
-                "You may assign yourself to Tasks created under your Story."
+                "⚠️ **Feature assignments are managed by the instructor.** " +
+                "Please do not change the assignee of a Feature. " +
+                "Assignment changes on Tasks are allowed."
             });
