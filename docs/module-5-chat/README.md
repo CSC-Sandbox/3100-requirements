@@ -21,6 +21,14 @@ From the repository root, run:
 mkdir -p target/classes
 javac -d target/classes \
 src/main/java/edu/calpoly/provided/Broker.java \
-src/main/java/edu/calpoly/provided/TestDisplayMessages.java \
-src/main/java/edu/calpoly/chat/MessageReceiver.java \
-src/main/java/edu/calpoly/chat/DisplayMessages.java
+src/main/java/edu/calpoly/messages/MessageReceiver.java \
+src/main/java/edu/calpoly/messages/DisplayMessages.java \
+src/test/java/edu/calpoly/test/sprint1/TestDisplayMessages.java
+```
+
+In separate terminals, run the simulator and the display:
+
+```bash
+java -cp target/classes edu.calpoly.test.sprint1.TestDisplayMessages
+java -cp target/classes edu.calpoly.messages.DisplayMessages
+```
