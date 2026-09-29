@@ -38,15 +38,32 @@ public class DisplayDataActivity {
         // ADD THE BEHAVIOR OF ACTIVITY DISPLAY
         ActivityDisplay display = new ActivityDisplay();
 
-        // FOR TASK #76,  ineed to add the timer (swinger)
         Timer refreshTimer = new Timer(1000, event -> {
+            int robotCount = tracker.getRecentCount("ROBOT");
+            int gazeCount = tracker.getRecentCount("GAZE");
+            int affectCount = tracker.getRecentCount("AFFECT");
+            int lidarCount = tracker.getRecentCount("LIDAR");
+
             display.updateCounts(
-                tracker.getRecentCount("ROBOT"),
-                tracker.getRecentCount("GAZE"),
-                tracker.getRecentCount("AFFECT"),
-                tracker.getRecentCount("LIDAR") 
+                    robotCount,
+                    gazeCount,
+                    affectCount,
+                    lidarCount
             );
 
+            int totalCount =
+                    robotCount + gazeCount + affectCount + lidarCount;
+
+            double messageRate = totalCount / 60.0;
+            double secondsSinceLastMessage =
+                    totalCount > 0 ? 0.0 : 60.0;
+
+            String state = ActivityClassifier.classify(
+                    messageRate,
+                    secondsSinceLastMessage
+            );
+
+            display.updateSystemState(state);
         });
 
         refreshTimer.start();

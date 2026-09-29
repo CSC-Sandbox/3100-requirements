@@ -13,6 +13,17 @@ import org.tribuo.impl.ArrayExample;
 import org.tribuo.provenance.SimpleDataSourceProvenance;
 
 
+/**
+ * Classifies recent monitoring-system activity using a Tribuo model.
+ * <p>
+ * The classifier uses the message rate and the number of seconds since
+ * the last message to return NO_ACTIVITY, NORMAL, or HIGH_ACTIVITY.</p>
+ * @author tphan56
+ * @version 1.0
+ */
+
+
+
 public final class ActivityClassifier {
 
     private static final String[] FEATURES = {
@@ -63,6 +74,16 @@ public final class ActivityClassifier {
 
         return trainer.train(dataset);
     }
+
+    /**
+     * Classifies the current level of system activity.
+     *
+     * @param messageRate messages received per second during the last minute
+     * @param secondsSinceLastMessage seconds since the most recent message
+     * @return NO_ACTIVITY, NORMAL, or HIGH_ACTIVITY
+     * @author tphan56
+     */
+
 
     public static String classify(
             double messageRate,
