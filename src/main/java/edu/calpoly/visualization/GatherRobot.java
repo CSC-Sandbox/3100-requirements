@@ -8,6 +8,7 @@
 package edu.calpoly.visualization;
 
 import edu.calpoly.provided.Broker;
+import RobotDiagnostics;
 
 public class GatherRobot {
     public void sendData(Broker broker, RobotPose pose) {
@@ -28,6 +29,7 @@ public class GatherRobot {
         System.out.println("Sending:");
         System.out.println(pose);
 
+        RobotDiagnostics.logSend(pose);
         broker.send(pose.toString());
     }
 
@@ -35,6 +37,7 @@ public class GatherRobot {
         RobotPose pose = new RobotPose(-1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0);
         Broker broker = new Broker("localhost",5000);
         GatherRobot robot = new GatherRobot();
+        RobotDiagnostics.logSend(pose);
         robot.sendData(broker, pose);
     }
 }
