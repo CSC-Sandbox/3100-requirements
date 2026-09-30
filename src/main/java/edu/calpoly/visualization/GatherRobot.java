@@ -8,7 +8,6 @@
 package edu.calpoly.visualization;
 
 import edu.calpoly.provided.Broker;
-import RobotDiagnostics;
 
 public class GatherRobot {
     public void sendData(Broker broker, RobotPose pose) {
