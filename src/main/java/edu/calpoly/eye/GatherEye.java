@@ -1,4 +1,8 @@
-package edu.calpoly.provided;
+package edu.calpoly.eye;
+
+import edu.calpoly.provided.*;
+
+
 
 /**
  * Broadcasts X and Y coordinates into message "GAZE,X,Y" format for use in CSV
@@ -13,8 +17,8 @@ public class GatherEye {
 
 	// Most recent x and y coordinate.
 	// When info is sent to broker, updates this
-	private float x;
-	private float y;
+	private float x = 0;
+	private float y = 0;
 
 	public GatherEye(){}
 
