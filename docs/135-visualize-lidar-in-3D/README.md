@@ -244,5 +244,5 @@ Relevant external types include:
 
 The diagram documents the separation between communication, LiDAR data management, the existing 2D visualization, and the new Jzy3d 3D visualization.
 
-![Story #135 UML](3100-requirements/docs/135-visualize-lidar-in-3D/Spring02.png)
+![Story #135 UML](Spring02.png)
 
