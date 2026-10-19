@@ -15,14 +15,7 @@ import org.jzy3d.chart.factories.EmulGLChartFactory; // returning type = AWTChar
 import java.awt.Component; // AWT 
 
 
-/** lidar3DPanel take the point data cloud and then it reders it as a jzy3D scatter chart, and then it store/embed that chart into a JPanel
-  * 1. Represents the point data
-  * 2. construct our chart
-  * 3. reders the chart
-  * @author Diego Martinez Parra (sp4msvwnz)
-  * @version version 2.0 (2026-09-28)
-  * lidar3DPanel
-  */
+/** Temporary negative-case JavaDoc test: intentionally omits mandatory tags. */
 
 
 public class Lidar3DPanel extends JPanel { //is a typed JPanel: inheritance so lidar3DPanel (child) -> JPanel (parent)
