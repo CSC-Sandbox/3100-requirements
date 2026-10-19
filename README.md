@@ -1,3 +1,4 @@
+<img width="2172" height="724" alt="EA14ABBA-E568-4958-8761-F1BDC90B7675" src="https://github.com/user-attachments/assets/37b1bae5-2074-4e66-821d-eb9ba9dea3aa" />
 
 Shared repository for **CSC 3100: Software Engineering**.
 
