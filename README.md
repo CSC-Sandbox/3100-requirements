@@ -21,7 +21,6 @@ src/main/java/                   Application source code
 src/test/java/                   Java test programs
 src/test/resources/sprint2/      Sprint 2 test datasets
 docs/story-<number>-<name>/      Story-specific documentation and diagrams
-.github/workflows/              Maven and Story/Task validation
 pom.xml                         Java 17 Maven configuration
 ```
 
