@@ -36,13 +36,13 @@ jobs:
               sys.exit(0)
 
           def section(name):
-              match = re.search(r'^##\\s+' + re.escape(name) + r'\\s*$([\\s\\S]*?)(?=^##\\s+|\\Z)', body, re.I | re.M)
+              match = re.search(r'^##\s+' + re.escape(name) + r'\s*$([\s\S]*?)(?=^##\s+|\Z)', body, re.I | re.M)
               return match.group(1) if match else ''
 
           story_text = section('User Story')
           task_text = section('Tasks')
-          story_refs = re.findall(r'(?<![\\w/])#(\\d+)\\b', story_text)
-          task_refs = re.findall(r'(?<![\\w/])#(\\d+)\\b', task_text)
+          story_refs = re.findall(r'(?<![\w/])#(\d+)\b', story_text)
+          task_refs = re.findall(r'(?<![\w/])#(\d+)\b', task_text)
           if len(story_refs) != 1:
               errors.append('Provide exactly one Story issue number in the User Story section (e.g., Story: #135).')
           if not task_refs:
