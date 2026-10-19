@@ -5,3 +5,6 @@ src/main/.DS_Store
 src/main/java/.DS_Store
 src/main/java/edu/.DS_Store
 src/main/java/edu/calpoly/.DS_Store
+
+# Maven build output
+target/
