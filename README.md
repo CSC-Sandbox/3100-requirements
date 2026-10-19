@@ -40,6 +40,19 @@ Students extended existing functionality with external Java libraries, Maven dep
 | [#166 — Improve Message Input Processing](https://github.com/CSC-Sandbox/3100-requirements/issues/166) | [@matthewdaviii](https://github.com/matthewdaviii) |
 | [#172 — Improve Robot Data Diagnostics](https://github.com/CSC-Sandbox/3100-requirements/issues/172) | [@srinityad](https://github.com/srinityad), [@sipactivism](https://github.com/sipactivism) |
 
+## Important Notes — Required for Every Submission
+
+> [!IMPORTANT]
+> **Mandatory UML diagram:** Include a UML class diagram exported as **PNG (`.png`) or JPEG (`.jpg` / `.jpeg`)** in the appropriate `docs/story-<number>-<name>/` folder. Do not submit an Astah `.asta` file in place of the image. Use `uml.png` or `uml.jpeg` when possible.
+>
+> **Mandatory Story-linked Pull Request:** Submit changes through a Pull Request, never directly to `main`. In the PR description, fill out **`## User Story`** with **exactly one** Story issue reference (for example, `#135`) and **`## Tasks`** with **at least one** Task issue reference (for example, `#183`). Every listed Task must be a **native GitHub sub-issue** of that Story. Merely mentioning a Task in text or linking an unrelated issue does not establish the required relationship.
+>
+> **Automated validation:** The **Story and Task references** check fails if the Story or Tasks sections are missing, if there are zero or multiple Story references, if an issue number does not exist, or if a referenced Task is not a sub-issue of the Story. GitHub Actions reports the specific error in the check logs. Fix the PR description or the issue relationship and rerun the check.
+>
+> **Build validation:** The Maven check may fail for compilation or test errors. Run `mvn clean verify` locally before submitting. A PR with failing required checks or missing required review cannot be merged into `main`.
+>
+> **JavaDoc and documentation:** Document your classes and keep UML consistent with the implementation. UML/image and JavaDoc requirements are course submission rules; the Story/Task workflow check does **not** automatically verify that the diagram or JavaDoc is present.
+
 ## Development Workflow
 
 **User Story → Sub-Tasks → Branch → Code and Tests → Documentation → Pull Request → Review → Merge**
