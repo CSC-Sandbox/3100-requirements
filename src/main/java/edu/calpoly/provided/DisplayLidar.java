@@ -1,5 +1,5 @@
 package edu.calpoly.provided;
-
+import java.awt.BorderLayout; // Added for #191 purposes 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,6 +7,10 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import org.jzy3d.maths.Coord3d;
+import edu.calpoly.visualization.Lidar3DPanel;
+import edu.calpoly.visualization.Lidar3D;
 
 /**
  * User Story #35 -- Create Map from LiDAR Data.
@@ -47,6 +51,7 @@ public class DisplayLidar extends JPanel {
 
     /** The map: occupied[row][col], where row 0 is the top of the map. */
     private final boolean[][] occupied = new boolean[ROWS][COLS];
+    private final Lidar3D lidar3D = new Lidar3D(); // 193 TASK REQUIRED
 
     /** Sizes the panel to the grid and sets a white background. */
     public DisplayLidar() {
@@ -156,7 +161,7 @@ public class DisplayLidar extends JPanel {
      * Receives LiDAR messages forever, marking each valid point on the map.
      * Runs on a background thread because Broker.receive blocks.
      */
-    void runReceiveLoop(Broker broker, boolean asciiMode) {
+    void runReceiveLoop(Broker broker, boolean asciiMode, Lidar3DPanel panel3D) {
         long received = 0;
         long rejected = 0;
 
@@ -181,7 +186,17 @@ public class DisplayLidar extends JPanel {
                 continue;
             }
 
-            markOccupied(p[0], p[1]);
+            markOccupied(p[0], p[1]); // existing 2D
+            lidar3D.addPoint(p[0], p[1], p[2]); // THERE the new 3D 
+            Coord3d[] pointCloud = lidar3D.getPoints().toArray(new Coord3d[0]); // a copy of new thread, take a snapshot and represent them
+            // live update
+            if (panel3D != null) {
+                SwingUtilities.invokeLater(() -> {
+                    panel3D.updatePoints(pointCloud);
+                    panel3D.repaint();
+
+                });
+            }
             received++;
 
             if (asciiMode) { // {can delete} For terminal debugging
@@ -211,9 +226,22 @@ public class DisplayLidar extends JPanel {
         boolean asciiMode = args.length > 0 && args[0].equals("--ascii");
         Broker broker = new Broker(HOST, PORT);
         DisplayLidar map = new DisplayLidar();
+        JPanel container = new JPanel(new BorderLayout()); // THis line supports #191 task, but also creates this composition idea
+        container.add(map, BorderLayout.WEST);
+        // Empty point
+        Coord3d[] points = new Coord3d[0];
+        Lidar3DPanel panel3D = new Lidar3DPanel(points); // creates the objkect that takes points
+        container.add(panel3D, BorderLayout.CENTER); // Lets center the chart
+
+        //layout might change, therefore must recalculate layout
+        container.revalidate();
+        // visuals changed, therefore it has to be drawn again
+        container.repaint();
+
+
 
         if (asciiMode) { // {can delete} For terminal debugging
-            map.runReceiveLoop(broker, true);
+            map.runReceiveLoop(broker, true, null);
             return;
         }
 
@@ -221,14 +249,14 @@ public class DisplayLidar extends JPanel {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("LiDAR Map");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.add(map);
+            frame.add(container); // no mapping anymore, but containing the 3D structure and
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
 
         // receive() blocks -> running it on the EDT would freeze I think
-        Thread receiver = new Thread(() -> map.runReceiveLoop(broker, false), "lidar-receiver");
+        Thread receiver = new Thread(() -> map.runReceiveLoop(broker, false, panel3D), "lidar-receiver");
         receiver.setDaemon(true);
         receiver.start();
     }
