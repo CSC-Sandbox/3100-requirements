@@ -26,14 +26,20 @@ pom.xml                         Java 17 Maven configuration
 
 Documentation folders use **Story numbers**. Include `README.md` for notes and `uml.png` for UML diagrams when available; existing JPEG images are also retained. Do not commit Astah `.asta` files.
 
-> [!WARNING]
+> [!IMPORTANT]
+> 
 > **Important Notes — Required for Every Submission**
 >
 > - **Mandatory UML:** Export the UML class diagram as **PNG (`.png`) or JPEG (`.jpg` / `.jpeg`)** in `docs/story-<number>-<name>/`. Do not submit an Astah `.asta` file instead of the image.
+>
 > - **Mandatory Story-linked PR:** Submit changes through a Pull Request, not directly to `main`. In its description, include exactly **one** Story reference under `## User Story` and at least **one** Task reference under `## Tasks`. Every Task must be a **native GitHub sub-issue** of the referenced Story.
+>
 > - **Automated validation:** The **Story and Task references** check fails for missing sections, missing or multiple Story references, nonexistent issues, or Tasks not linked as sub-issues. Read the GitHub Actions error, fix the PR description or issue relationship, and rerun the check.
+>
 > - **Build validation:** Compilation or test failures cause Maven checks to fail. Required checks and review must pass before merging.
+>
 > - **JavaDoc:** Document classes and keep UML consistent with the implementation. The Story/Task check does **not** automatically verify UML or JavaDoc.
+>
 
 ## Build and Test
 
