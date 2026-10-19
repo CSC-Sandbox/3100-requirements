@@ -53,4 +53,4 @@ This compiles the project and runs its configured tests and verification steps. 
 
 ## Assignments
 
-See [Assignment History](docs/ASSIGNMENTS.md) for A01 and A02 accepted Stories and student contributions.
+See [Assignment History](ASSIGNMENTS.md) for A01/A02 accepted Stories and A03 individual Sprint 3 assignments.
