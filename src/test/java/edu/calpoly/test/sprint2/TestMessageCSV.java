@@ -38,7 +38,7 @@ public class TestMessageCSV {
 
     private static void testProvidedFile() {
         try {
-            Path file = Path.of("data", "sprint2", "messages-test.csv");
+            Path file = Path.of("src", "test", "resources", "sprint2", "messages-test.csv");
             List<String> messages = RetrieveMessages.readMessages(file);
 
             check(messages.size() == 3,
