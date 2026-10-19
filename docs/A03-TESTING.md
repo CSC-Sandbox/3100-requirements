@@ -22,7 +22,9 @@ component-level acceptance tests will be specified in the corresponding Stories.
 3. Demonstrate observable behavior with controlled inputs and expected outputs.
 4. Verify that the original feature still works and that the refactoring
    has not introduced regressions.
-5. Submit updated UML (PNG or JPEG), JavaDoc, tests, and a Story/Task-linked PR.
+5. Update the exact existing UML image listed in `ASSIGNMENTS.md` at its original path; do not add a separate UML image. Include behavioral tests and a Story/Task-linked PR.
+6. Before coding, create at least three **native GitHub sub-issue Tasks** under your assigned Story (analysis/design, implementation, and verification/documentation). Assign yourself and define verifiable outcomes.
+7. Every created or modified Java class/interface requires class-level JavaDoc with `@author` (your name) and `@version` (for example `1.0`). Each class/interface belongs in its own `.java` file; no inner or nested classes.
 
 For Swing observers, update components on the Event Dispatch Thread using
 `SwingUtilities.invokeLater`; tests should wait for the EDT to finish.
