@@ -39,7 +39,7 @@ def api(path):
 
 def section(body, title):
     match = re.search(
-        r"^##\\s+" + re.escape(title) + r"\\s*$([\\s\\S]*?)(?=^##\\s+|\\Z)",
+        r"^##\s+" + re.escape(title) + r"\s*$([\s\S]*?)(?=^##\s+|\Z)",
         body, re.I | re.M,
     )
     return match.group(1) if match else ""
@@ -52,7 +52,7 @@ def main():
         print("Instructor maintenance PR: A03 student validation exempt.")
         return 0
 
-    story_refs = re.findall(r"(?<![\\w/])#(\\d+)\\b", section(pr.get("body") or "", "User Story"))
+    story_refs = re.findall(r"(?<![\w/])#(\d+)\b", section(pr.get("body") or "", "User Story"))
     a03_refs = [int(ref) for ref in story_refs if int(ref) in ASSIGNMENTS]
     if not a03_refs:
         print("Not an A03 Story PR: A03-specific checks do not apply.")
@@ -84,7 +84,7 @@ def main():
     if uml not in changed or changed[uml]["status"] == "removed":
         errors.append(f"Update the existing UML image IN PLACE: {uml}. Do not submit a separate diagram.")
     extra_images = [p for p, f in changed.items()
-                    if p.startswith("docs/") and re.search(r"\\.(png|jpe?g)$", p, re.I)
+                    if p.startswith("docs/") and re.search(r"\.(png|jpe?g)$", p, re.I)
                     and p != uml and f["status"] == "added"]
     if extra_images:
         errors.append("Do not add new UML images; update the assigned existing image: " + ", ".join(extra_images))
