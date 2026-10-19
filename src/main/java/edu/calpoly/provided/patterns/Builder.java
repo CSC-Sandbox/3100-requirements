@@ -1,9 +1,11 @@
- public class Builder {
-        private final int id;
-        private final String name;
-        private String major;
-        private int graduationYear;
-        private String email;
+package edu.calpoly.provided.patterns;
+
+public class Builder {
+        final int id;
+        final String name;
+        String major;
+        int graduationYear;
+        String email;
 
         public Builder(int id, String name) {
             this.id = id;

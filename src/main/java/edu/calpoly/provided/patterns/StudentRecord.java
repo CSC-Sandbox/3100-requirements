@@ -8,7 +8,7 @@ public class StudentRecord {
     private final int graduationYear;
     private final String email;
 
-    private StudentRecord(Builder builder) {
+    StudentRecord(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
         this.major = builder.major;
