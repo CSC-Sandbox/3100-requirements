@@ -8,7 +8,7 @@ The tables identify GitHub accounts associated with work through Story assignmen
 
 Students worked from assigned User Stories, decomposed requirements into Tasks, implemented Java functionality, documented designs with UML and JavaDoc, and submitted changes for review through Pull Requests. Sprint 1 also introduced the Maven project structure.
 
-<table width="100%" style="width:100%">
+<table width="100%">
 <thead><tr><th>User Story</th><th>Student GitHub account(s)</th></tr></thead>
 <tbody>
 <tr><td><a href="https://github.com/CSC-Sandbox/3100-requirements/issues/6">#6 — Enter Message</a></td><td><a href="https://github.com/jnne-lbg">@jnne-lbg</a> (Tasks #59–#62)</td></tr>
@@ -32,7 +32,7 @@ Students worked from assigned User Stories, decomposed requirements into Tasks, 
 
 Students extended existing functionality with external Java libraries, Maven dependencies, integration, tests, and updated UML documentation. The table reflects **GitHub issue assignees**, not an exhaustive list of all contributors; see the linked issues and Pull Requests for contribution history.
 
-<table width="100%" style="width:100%">
+<table width="100%">
 <thead><tr><th>User Story</th><th>Student GitHub account(s)</th></tr></thead>
 <tbody>
 <tr><td><a href="https://github.com/CSC-Sandbox/3100-requirements/issues/135">#135 — Visualize LiDAR Data in 3D</a></td><td><a href="https://github.com/sp4msvwnz">@sp4msvwnz</a>, <a href="https://github.com/MKHLimkilde">@MKHLimkilde</a></td></tr>
