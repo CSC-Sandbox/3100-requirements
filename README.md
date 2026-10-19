@@ -1,5 +1,8 @@
+<<<<<<< HEAD
+=======
 <img width="2172" height="724" alt="6D10B86A-3228-4A00-BA79-C505B6495A8F" src="https://github.com/user-attachments/assets/3693485d-618f-4564-83fc-23b28116f3f5" />
 
+>>>>>>> origin/main
 
 Shared repository for **CSC 3100: Software Engineering**.
 
