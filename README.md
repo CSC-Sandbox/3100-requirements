@@ -54,3 +54,5 @@ This compiles the project and runs its configured tests and verification steps. 
 ## Assignments
 
 See [Assignment History](ASSIGNMENTS.md) for A01/A02 accepted Stories and A03 individual Sprint 3 assignments.
+
+<!-- Temporary A03 validator negative-case test; do not merge. -->
