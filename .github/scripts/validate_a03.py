@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Check objective A03 PR requirements; semantic design review remains manual."""
+import base64
 import json
 import os
 import re
@@ -43,6 +44,41 @@ def section(body, title):
         body, re.I | re.M,
     )
     return match.group(1) if match else ""
+
+
+
+def check_class_javadoc(source_text, filename):
+    """Check class-level tags for each Java type declared in a changed source file."""
+    problems = []
+    declarations = list(re.finditer(
+        r"(?m)^\\s*(?:(?:public|protected|private|abstract|final|sealed|non-sealed|static|strictfp)\\s+)*"
+        r"(?:class|interface|enum|record|@interface)\\s+([A-Za-z_$][\\w$]*)\\b",
+        source_text,
+    ))
+    for match in declarations:
+        name = match.group(1)
+        before = source_text[:match.start()]
+        doc = re.search(
+            r"/\\*\\*([\\s\\S]*?)\\*/\\s*(?:@(?:[\\w.]+)(?:\\([^)]*\\))?\\s*)*$",
+            before,
+        )
+        if not doc:
+            problems.append(f"{filename}: {name} needs class-level JavaDoc immediately before its declaration.")
+            continue
+        comment = doc.group(1)
+        for tag in ("author", "version"):
+            if not re.search(r"(?m)^\\s*\\*\\s*@" + tag + r"\\s+\\S+", comment):
+                problems.append(f"{filename}: {name} needs a nonempty @{tag} tag in its class-level JavaDoc.")
+    return problems
+
+
+def pr_file_content(repo, head_sha, filename):
+    """Read the proposed PR-head file, not the main-branch version."""
+    from urllib.parse import quote
+    data = api(f"repos/{repo}/contents/{quote(filename, safe='/')}?ref={head_sha}")
+    if data.get("encoding") != "base64":
+        raise ValueError(f"Unexpected content encoding for {filename}")
+    return base64.b64decode(data["content"]).decode("utf-8")
 
 
 def main():
@@ -98,18 +134,24 @@ def main():
     if forbidden:
         errors.append("Do not modify instructor-provided code or fixtures: " + ", ".join(forbidden))
 
-    # A diff check can establish that documentation was edited, but not that
-    # every public API has meaningful JavaDoc. Reviewers must inspect quality.
+    # Validate actual Java source at the PR head, not just changed diff lines.
+    # This also checks unchanged class headers when students modify methods.
     java_files = [f for f in files if f["filename"].startswith("src/main/java/")
-                  and f["filename"].endswith(".java")]
-    if java_files and not any("/**" in (f.get("patch") or "") for f in java_files):
-        errors.append("Add or update JavaDoc (/** ... */) in changed application classes.")
+                  and f["filename"].endswith(".java") and f["status"] != "removed"]
+    for file in java_files:
+        filename = file["filename"]
+        try:
+            source_text = pr_file_content(repo, pr["head"]["sha"], filename)
+            errors.extend(check_class_javadoc(source_text, filename))
+        except (ValueError, UnicodeDecodeError, KeyError) as exc:
+            errors.append(f"Could not validate JavaDoc in {filename}: {exc}")
+
 
     if errors:
         for error in errors:
             print("::error::" + error)
         return 1
-    print(f"A03 Story #{story}: author, assigned source, existing UML, JUnit test, and JavaDoc change detected.")
+    print(f"A03 Story #{story}: author, assigned source, existing UML, JUnit test, and class-level JavaDoc tags verified.")
     print("Behavior, UML accuracy, and JavaDoc quality still require review; Maven Build verifies execution.")
     return 0
 
