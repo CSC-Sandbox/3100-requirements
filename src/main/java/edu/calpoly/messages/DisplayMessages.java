@@ -10,10 +10,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+/**
+ * Displays received messages in arrival order in a Swing window.
+ * Starts a background receiver and updates the interface on the event thread.
+ *
+ * @author Matthew Davi
+ * @version September 25, 2026
+ */
 public class DisplayMessages extends JFrame {
     private final JTextArea messageArea;
     private final JLabel statusLabel;
 
+    /** Creates the message window and its status display. */
     public DisplayMessages() {
         super("Messages");
 
@@ -57,6 +65,11 @@ public class DisplayMessages extends JFrame {
         });
     }
 
+    /**
+     * Opens the message window and starts receiving messages.
+     *
+     * @param args command-line arguments (unused)
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             DisplayMessages application = new DisplayMessages();
