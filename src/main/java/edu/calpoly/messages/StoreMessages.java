@@ -8,19 +8,23 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
 import edu.calpoly.provided.Broker;
 
 
 /*
-* Connects to a Broker and uses it to receive messages and put them in a file.
-* 
-* @author Landon McCaslin
-* @version 1.0 (2026-09-23)
-**/
+ * Connects to a Broker and uses it to receive messages and put them in a file.
+ *
+ * @author Landon McCaslin
+ * @version 1.1 (2026-09-29)
+ */
 public class StoreMessages {
     private static final String DEFAULT_HOST = "localhost";
     private static final int DEFAULT_PORT = 5000;
-    private static final Path DEFAULT_DATA_FILE = Path.of("data", "messages.csv");
+    private static final Path DEFAULT_DATA_FILE =
+            Path.of("data", "messages.csv");
 
     private final Broker broker;
     private final Path dataFile;
@@ -31,44 +35,61 @@ public class StoreMessages {
     }
 
     public static void main(String[] args) {
-        Path dataFile = args.length > 0 ? Path.of(args[0]) : DEFAULT_DATA_FILE;
-        StoreMessages store = new StoreMessages(dataFile, DEFAULT_HOST, DEFAULT_PORT);
+        Path dataFile =
+                args.length > 0 ? Path.of(args[0]) : DEFAULT_DATA_FILE;
+
+        StoreMessages store =
+                new StoreMessages(dataFile, DEFAULT_HOST, DEFAULT_PORT);
 
         try {
             store.receiveAndStore();
         } catch (IOException e) {
-            System.err.println("Unable to store messages: " + e.getMessage());
+            System.err.println(
+                    "Unable to store messages: " + e.getMessage());
         }
     }
 
-    /* Receives messages until the sender closes the connection. */
-    public void receiveAndStore() throws IOException {
-        Path parent = dataFile.getParent();
+    public static void writeRecord(
+            Path file,
+            String timestamp,
+            String message) throws IOException {
+
+        Path parent = file.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
         }
 
         try (BufferedWriter writer = Files.newBufferedWriter(
-                dataFile,
+                file,
                 StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE,
-                StandardOpenOption.APPEND)) {
-            while (true) {
-                final String message;
-                try {
-                    message = broker.receive();
-                } catch (IllegalStateException e) {
-                    /*  Broker.receive() reports the sender closing its connection as an IllegalStateException.
-                    All records are already flushed. */
-                    return;
-                }
+                StandardOpenOption.APPEND);
+             CSVPrinter printer = new CSVPrinter(
+                writer, CSVFormat.DEFAULT)) {
 
-                writer.write(Instant.now().toString());
-                writer.write(',');
-                writer.write(message);
-                writer.newLine();
-                writer.flush();
+            printer.printRecord(timestamp, message);
+        }
+    }
+
+    /* Receives messages until the sender closes the connection. */
+    public void receiveAndStore() throws IOException {
+        while (true) {
+            final String message;
+
+            try {
+                message = broker.receive();
+            } catch (IllegalStateException e) {
+                /*
+                 * Broker.receive() reports the sender closing its
+                 * connection as an IllegalStateException.
+                 */
+                return;
             }
+
+            writeRecord(
+                    dataFile,
+                    Instant.now().toString(),
+                    message);
         }
     }
 }
