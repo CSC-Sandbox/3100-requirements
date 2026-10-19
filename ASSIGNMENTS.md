@@ -53,6 +53,10 @@ Each student improves an **existing feature** using the assigned design pattern 
 
 **Update the existing UML diagram:** Find the diagram corresponding to your Story in `docs/story-<number>-<name>/`, edit the **original diagram**, and replace its existing PNG or JPEG export **at the same path and filename**. Do not add a separate A03 diagram. Keep the UML synchronized with the actual refactored code. If the listed diagram covers only part of the feature, extend it to show the relevant new interfaces, classes, inheritance, and associations. Ask the instructor before changing the diagram path.
 
+**Create your own native sub-issue Tasks before coding (mandatory):** Open your assigned A03 Story and use its **Sub-issues** section to create at least three child Tasks: (1) analyze the existing code and document the design problem, (2) implement and integrate the assigned pattern, and (3) update the **exact UML file listed in the table below**, JavaDoc, and behavioral tests. Assign yourself to each Task, write a verifiable outcome, and track progress. These must be **native sub-issues of your assigned Story**, not checklists or merely linked issues. Reference the parent Story in your PR's `## User Story` section and at least one child Task in `## Tasks`. The Story/Task validation checks the parent-child relationship.
+
+**JavaDoc is mandatory:** Every Java class and interface you create or modify must have class-level JavaDoc with both `@author` (your name) and `@version` (for example, `1.0`). Keep documentation synchronized with the implementation. Each Java class or interface must be in its own `.java` file; do not introduce nested or inner classes.
+
 **Behavioral evidence:** Include tests or a runnable demonstration showing the assigned pattern is used in the feature and changes its behavior correctly, not merely that pattern classes exist. Use instructor-provided Blackboard and fixtures when specified; do not modify instructor-provided code. Add JavaDoc and reference the Story plus native sub-issue Tasks in the PR.
 
 <table width="100%">
