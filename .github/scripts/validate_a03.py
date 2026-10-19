@@ -51,15 +51,15 @@ def check_class_javadoc(source_text, filename):
     """Check class-level tags for each Java type declared in a changed source file."""
     problems = []
     declarations = list(re.finditer(
-        r"(?m)^\\s*(?:(?:public|protected|private|abstract|final|sealed|non-sealed|static|strictfp)\\s+)*"
-        r"(?:class|interface|enum|record|@interface)\\s+([A-Za-z_$][\\w$]*)\\b",
+        r"(?m)^\s*(?:(?:public|protected|private|abstract|final|sealed|non-sealed|static|strictfp)\s+)*"
+        r"(?:class|interface|enum|record|@interface)\s+([A-Za-z_$][\w$]*)\b",
         source_text,
     ))
     for match in declarations:
         name = match.group(1)
         before = source_text[:match.start()]
         doc = re.search(
-            r"/\\*\\*([\\s\\S]*?)\\*/\\s*(?:@(?:[\\w.]+)(?:\\([^)]*\\))?\\s*)*$",
+            r"/\*\*([\s\S]*?)\*/\s*(?:@(?:[\w.]+)(?:\([^)]*\))?\s*)*$",
             before,
         )
         if not doc:
@@ -67,7 +67,7 @@ def check_class_javadoc(source_text, filename):
             continue
         comment = doc.group(1)
         for tag in ("author", "version"):
-            if not re.search(r"(?m)^\\s*\\*\\s*@" + tag + r"\\s+\\S+", comment):
+            if not re.search(r"(?m)^\s*\*\s*@" + tag + r"\s+\S+", comment):
                 problems.append(f"{filename}: {name} needs a nonempty @{tag} tag in its class-level JavaDoc.")
     return problems
 
