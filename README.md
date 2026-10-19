@@ -40,17 +40,14 @@ Students extended existing functionality with external Java libraries, Maven dep
 | [#166 — Improve Message Input Processing](https://github.com/CSC-Sandbox/3100-requirements/issues/166) | [@matthewdaviii](https://github.com/matthewdaviii) |
 | [#172 — Improve Robot Data Diagnostics](https://github.com/CSC-Sandbox/3100-requirements/issues/172) | [@srinityad](https://github.com/srinityad), [@sipactivism](https://github.com/sipactivism) |
 
-## Important Notes — Required for Every Submission
-
- **Mandatory UML diagram:** Include a UML class diagram exported as **PNG (`.png`) or JPEG (`.jpg` / `.jpeg`)** in the appropriate `docs/story-<number>-<name>/` folder. Do not submit an Astah `.asta` file in place of the image. Use `uml.png` or `uml.jpeg` when possible.
-
- **Mandatory Story-linked Pull Request:** Submit changes through a Pull Request, never directly to `main`. In the PR description, fill out **`## User Story`** with **exactly one** Story issue reference (for example, `#135`) and **`## Tasks`** with **at least one** Task issue reference (for example, `#183`). Every listed Task must be a **native GitHub sub-issue** of that Story. Merely mentioning a Task in text or linking an unrelated issue does not establish the required relationship.
-
- **Automated validation:** The **Story and Task references** check fails if the Story or Tasks sections are missing, if there are zero or multiple Story references, if an issue number does not exist, or if a referenced Task is not a sub-issue of the Story. GitHub Actions reports the specific error in the check logs. Fix the PR description or the issue relationship and rerun the check.
-
- **Build validation:** The Maven check may fail for compilation or test errors. Run `mvn clean verify` locally before submitting. A PR with failing required checks or missing required review cannot be merged into `main`.
-
- **JavaDoc and documentation:** Document your classes and keep UML consistent with the implementation. UML/image and JavaDoc requirements are course submission rules; the Story/Task workflow check does **not** automatically verify that the diagram or JavaDoc is present.
+> [!WARNING]
+> **Important Notes — Required for Every Submission**
+>
+> - **Mandatory UML:** Include a class diagram as **PNG (`.png`) or JPEG (`.jpg` / `.jpeg`)** in `docs/story-<number>-<name>/`. Do not submit an Astah `.asta` file instead of the image.
+> - **Mandatory Story-linked PR:** Submit through a Pull Request, not directly to `main`. In the PR description, include exactly **one** issue number under `## User Story` and **at least one** Task issue number under `## Tasks`. Each Task must be a **native GitHub sub-issue** of that Story.
+> - **Story/Task validation errors:** The **Story and Task references** check fails when required sections or references are missing, when multiple Stories are listed, when an issue does not exist, or when a Task is not a sub-issue of the Story. Read the GitHub Actions error message, correct the PR or issue relationship, and rerun the check.
+> - **Maven checks:** Run `mvn clean verify` before submitting. Compilation or test failures cause the build check to fail; required checks and review must pass before merging.
+> - **JavaDoc:** Document classes and keep UML consistent with the code. The Story/Task check does **not** automatically verify JavaDoc or UML submission.
 
 ## Development Workflow
 
