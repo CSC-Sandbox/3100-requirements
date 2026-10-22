@@ -3,6 +3,7 @@
 package edu.calpoly.visualization;
  
 import javax.swing.JPanel;  // LIBRARY -> I WANT TO BE A WINDOW... from analogy from class
+import javax.swing.SwingUtilities;
 
 import org.jzy3d.maths.Coord3d; // to map the coordinates
 
@@ -23,18 +24,19 @@ import java.awt.Component; // AWT
   * 3. reders the chart
   * @author Diego Martinez Parra (sp4msvwnz)
   * @author Marcus Hauen-Limkilde
-  * @version 3.0
+  * @version 4.0
   * lidar3DPanel
   */
 
 
-public class Lidar3DPanel extends JPanel { //is a typed JPanel: inheritance so lidar3DPanel (child) -> JPanel (parent)
+public class Lidar3DPanel extends JPanel implements ScanView { //is a typed JPanel: inheritance so lidar3DPanel (child) -> JPanel (parent)
     
     private static final long serialVersionUID = 1l; // swing component
     
     // TASK 193 part/component
     private final Scatter scatter;
     private final AWTChart chart;
+    private Coord3d [] lastPoints = new Coord3d[0];
 
     private final transient LidarScanListener listener = new LidarScanListener(this);
 
@@ -51,13 +53,20 @@ public class Lidar3DPanel extends JPanel { //is a typed JPanel: inheritance so l
     }
 
     // constructor
-
+    @Override
     public void updatePoints(Coord3d[] points) {
-
+        if (!SwingUtilities.isEventDispatchThread()) {
+            throw new IllegalStateException("updatePoints must be called on the EDT");
+        }
+        lastPoints = points;
         scatter.setData(points);
         chart.getView().updateBounds();
         chart.render();
 
+    }
+
+    public Coord3d [] getLastPoints() {
+        return lastPoints;
     }
 
 
