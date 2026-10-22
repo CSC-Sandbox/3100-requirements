@@ -22,7 +22,7 @@ import edu.calpoly.visualization.Lidar3D;
  * Run with --ascii to print the map in the terminal instead of a window.
  *
  * @author Marcus Hauen-Limkilde
- * @version 1.0
+ * @version 2.0
  */
 public class DisplayLidar extends JPanel {
 
@@ -161,7 +161,7 @@ public class DisplayLidar extends JPanel {
      * Receives LiDAR messages forever, marking each valid point on the map.
      * Runs on a background thread because Broker.receive blocks.
      */
-    void runReceiveLoop(Broker broker, boolean asciiMode, Lidar3DPanel panel3D) {
+    void runReceiveLoop(Broker broker, boolean asciiMode) {
         long received = 0;
         long rejected = 0;
 
@@ -188,15 +188,8 @@ public class DisplayLidar extends JPanel {
 
             markOccupied(p[0], p[1]); // existing 2D
             lidar3D.addPoint(p[0], p[1], p[2]); // THERE the new 3D 
-            Coord3d[] pointCloud = lidar3D.getPoints().toArray(new Coord3d[0]); // a copy of new thread, take a snapshot and represent them
-            // live update
-            if (panel3D != null) {
-                SwingUtilities.invokeLater(() -> {
-                    panel3D.updatePoints(pointCloud);
-                    panel3D.repaint();
-
-                });
-            }
+            Coord3d[] pointCloud = lidar3D.getPoints().toArray(new Coord3d[0]); // Copy of new thread, take a snapshot and represent them
+            Blackboard.put(Blackboard.LIDAR_SCAN,pointCloud); // publish new point cloud
             received++;
 
             if (asciiMode) { // {can delete} For terminal debugging
@@ -241,7 +234,7 @@ public class DisplayLidar extends JPanel {
 
 
         if (asciiMode) { // {can delete} For terminal debugging
-            map.runReceiveLoop(broker, true, null);
+            map.runReceiveLoop(broker,true);
             return;
         }
 
@@ -256,7 +249,7 @@ public class DisplayLidar extends JPanel {
         });
 
         // receive() blocks -> running it on the EDT would freeze I think
-        Thread receiver = new Thread(() -> map.runReceiveLoop(broker, false, panel3D), "lidar-receiver");
+        Thread receiver = new Thread(() -> map.runReceiveLoop(broker, false), "lidar-receiver"); 
         receiver.setDaemon(true);
         receiver.start();
     }

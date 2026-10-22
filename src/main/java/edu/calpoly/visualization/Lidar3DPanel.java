@@ -8,6 +8,8 @@ import org.jzy3d.maths.Coord3d; // to map the coordinates
 
 import org.jzy3d.plot3d.primitives.Scatter; // to create the 3D
 
+import edu.calpoly.provided.Blackboard;
+
 import org.jzy3d.chart.AWTChart; // constructor
 
 import org.jzy3d.chart.factories.EmulGLChartFactory; // returning type = AWTChart\
@@ -20,7 +22,8 @@ import java.awt.Component; // AWT
   * 2. construct our chart
   * 3. reders the chart
   * @author Diego Martinez Parra (sp4msvwnz)
-  * @version version 2.0 (2026-09-28)
+  * @author Marcus Hauen-Limkilde
+  * @version 3.0
   * lidar3DPanel
   */
 
@@ -32,6 +35,20 @@ public class Lidar3DPanel extends JPanel { //is a typed JPanel: inheritance so l
     // TASK 193 part/component
     private final Scatter scatter;
     private final AWTChart chart;
+
+    private final transient LidarScanListener listener = new LidarScanListener(this);
+
+    @Override
+    public void addNotify() { // Subscribes to lidar.scan when panel is added to a container
+        super.addNotify();
+        Blackboard.subscribe(Blackboard.LIDAR_SCAN, listener);
+    }
+
+    @Override
+    public void removeNotify() { // Unsubscribes from lidar.scan when panel is removed from a container
+        Blackboard.unsubscribe(Blackboard.LIDAR_SCAN, listener);
+        super.removeNotify();
+    }
 
     // constructor
 
