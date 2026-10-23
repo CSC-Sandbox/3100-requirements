@@ -2,14 +2,6 @@
 
 Implement the TODOs in `src/main/java/edu/calpoly/csc3100/mqtt/StudentApp.java`. Requires Java 17+ and Maven.
 
-## Run
-
-```bash
-mvn clean compile exec:java -Dexec.args="dgurusam fall2026"
-```
-
-Replace `dgurusam` with **your** Cal Poly email username (without `@calpoly.edu`) and `fall2026` with the session announced by the instructor.
-
 ## Protocol
 
 Broker: `tcp://broker.hivemq.com:1883` (free public HiveMQ broker).
