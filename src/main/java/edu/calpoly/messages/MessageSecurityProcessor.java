@@ -7,11 +7,7 @@ package edu.calpoly.messages;
  * @version 1.0
  */
 public interface MessageSecurityProcessor {
-    /**
-     * Processes a message and returns its secure representation.
-     *
-     * @param message plaintext message to process
-     * @return processed message
-     */
+    // Processes a message and returns its secure representation.
+   
     String process(String message);
 }
