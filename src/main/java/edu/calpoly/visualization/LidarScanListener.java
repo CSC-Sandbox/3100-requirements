@@ -9,16 +9,16 @@ import org.jzy3d.maths.Coord3d;
 
 /**
  * Listens for lidar.scan events on the Blackboard and forwards each scan to a
- * Lidar3DPanel on the Event Dispatch Thread.
+ * ScanView on the Event Dispatch Thread.
  *
  * @author Marcus Hauen-Limkilde
  * @version 1.0
  */
 
 public class LidarScanListener implements PropertyChangeListener {
-    private final Lidar3DPanel panel;
+    private final ScanView panel;
 
-    public LidarScanListener(Lidar3DPanel panel) {
+    public LidarScanListener(ScanView panel) {
         this.panel = panel;
     }
 
