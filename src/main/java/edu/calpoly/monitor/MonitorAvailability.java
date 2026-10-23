@@ -1,3 +1,5 @@
+package edu.calpoly.monitor;
+
 import edu.calpoly.provided.Broker;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

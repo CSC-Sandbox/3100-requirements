@@ -1,0 +1,28 @@
+name: A03 Submission Validation
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+jobs:
+  a03:
+    name: A03 submission requirements
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out trusted validation script
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Check A03 files, UML, JavaDoc, and tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: python3 .github/scripts/validate_a03.py
