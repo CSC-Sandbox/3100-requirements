@@ -10,7 +10,7 @@ import edu.calpoly.provided.Broker;
  * Decorator that logs message retrieval operations and their elapsed time.
  *
  * @author Anay Nagar (ReeledWarrior14)
- * @version 1.0
+ * @version 1.0 (10/23/2026)
  */
 public class RetrieveMessagesDiagnostics extends MessageRetrievalDecorator {
 

@@ -10,7 +10,7 @@ import edu.calpoly.provided.Broker;
  * Base decorator that forwards message retrieval operations to another component.
  *
  * @author Anay Nagar (ReeledWarrior14)
- * @version 1.0
+ * @version 1.0 (10/23/2026)
  */
 public abstract class MessageRetrievalDecorator implements MessageRetrievalInterface {
     protected MessageRetrievalInterface messageRetriever;
