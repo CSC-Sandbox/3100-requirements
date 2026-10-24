@@ -3,9 +3,11 @@ package edu.calpoly.messages;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/*
- * Builds a StoreMessages class object. Building does not connect to the broker or create files.
- * Host availability and filesystem permissions are still checked when the store is used. A builder
+/**
+ * Builds a StoreMessages class object. Building does not connect to the broker
+ * or create files.
+ * Host availability and filesystem permissions are still checked when the store
+ * is used. A builder
  * may be reused; changing it does not change stores already built.
  *
  * @author Landon McCaslin
