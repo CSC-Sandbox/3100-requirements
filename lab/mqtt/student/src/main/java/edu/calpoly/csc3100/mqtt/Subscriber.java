@@ -5,7 +5,12 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-/** Receives instructor challenges and acknowledges those for this student. */
+/**
+ * Receives instructor challenges and acknowledges those for this student.
+ *
+ * @author Marcus Hauen-Limkilde
+ * @version 1.0
+ */
 public final class Subscriber implements MqttCallback {
     private static final String BROKER = "tcp://broker.hivemq.com:1883";
     private static final int QOS = 1;
@@ -21,24 +26,33 @@ public final class Subscriber implements MqttCallback {
     }
 
     public void connect() throws MqttException {
-        // TODO 5: Create an MqttClient with its OWN unique ID and MemoryPersistence.
-        // TODO 6: Register this instance as callback: client.setCallback(this).
-        // TODO 7: Connect with a clean session.
-        throw new UnsupportedOperationException("TODO: Subscriber.connect");
+        client = new MqttClient(BROKER, "sub-" + studentId + "-" + UUID.randomUUID(),   
+            new MemoryPersistence());
+        client.setCallback(this);
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setCleanSession(true);
+        client.connect(options);
     }
 
     public void subscribe() throws MqttException {
-        // TODO 8: Subscribe to prefix + "challenge" with QoS 1.
-        throw new UnsupportedOperationException("TODO: Subscriber.subscribe");
+        client.subscribe(prefix + "challenge", QOS);
+        System.out.println("Subscribed to " + prefix + "challenge");
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
         System.out.println("Received: " + payload);
-        // TODO 9: Parse the payload in the form "id:key".
-        // TODO 10: Ignore challenges addressed to other students.
-        // TODO 11: Call publisher.sendAck(key) for this student's challenge.
+
+        String[] parts = payload.split(":", 2);
+        if(parts.length != 2) { return;}
+        String id = parts[0];
+        String key = parts[1];
+
+        if (!id.equals(studentId)) {
+            return;
+        }
+        publisher.sendAck(key);
         // Remember: all students share the same challenge topic.
     }
 

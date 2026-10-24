@@ -5,7 +5,12 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-/** Publishes READY and ACK messages to the instructor. Complete the TODOs. */
+/**
+ * Publishes READY and ACK messages to the instructor.
+ *
+ * @author Marcus Hauen-Limkilde
+ * @version 1.0
+ */
 public final class Publisher {
     private static final String BROKER = "tcp://broker.hivemq.com:1883";
     private static final int QOS = 1;
@@ -19,21 +24,27 @@ public final class Publisher {
     }
 
     public void connect() throws MqttException {
-        // TODO 1: Create an MqttClient with a unique ID (UUID) and MemoryPersistence.
-        // TODO 2: Connect with a clean session.
-        throw new UnsupportedOperationException("TODO: Publisher.connect");
+        client = new MqttClient(BROKER, "pub-" + studentId + "-" + UUID.randomUUID(), new MemoryPersistence());
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setCleanSession(true);
+        client.connect(options);
     }
 
     public void sendReady() throws MqttException {
         String message = studentId + ":READY";
-        // TODO 3: Publish UTF-8 message to prefix + "ready", QoS 1, non-retained.
-        // Hint: client.publish(topic, mqttMessage);
-        throw new UnsupportedOperationException("TODO: Publisher.sendReady");
+        MqttMessage msg = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
+        msg.setQos(QOS);
+        msg.setRetained(false);
+        client.publish(prefix + "ready", msg);
+        System.out.println("Published READY: " + message);
     }
 
     public void sendAck(String key) throws MqttException {
         String message = studentId + ":ACK:" + key;
-        // TODO 4: Publish UTF-8 message to prefix + "ack", QoS 1, non-retained.
-        throw new UnsupportedOperationException("TODO: Publisher.sendAck");
+        MqttMessage msg = new MqttMessage(message.getBytes(StandardCharsets.UTF_8));
+        msg.setQos(QOS);
+        msg.setRetained(false);
+        client.publish(prefix + "ack", msg);
+        System.out.println("Published ACK: " + message);
     }
 }
