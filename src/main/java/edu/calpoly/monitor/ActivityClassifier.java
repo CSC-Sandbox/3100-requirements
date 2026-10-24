@@ -14,16 +14,18 @@ import org.tribuo.provenance.SimpleDataSourceProvenance;
 
 
 /**
- * Classifies recent monitoring-system activity using a Tribuo model.
- * <p>
- * The classifier uses the message rate and the number of seconds since
- * the last message to return NO_ACTIVITY, NORMAL, or HIGH_ACTIVITY.</p>
+ * Classifies recent monitoring-system activity using an `ActivityStrategy` model.
+ *
  * @author tphan56
- * @version 1.0
+ * @version 2.0
  */
 public final class ActivityClassifier {
     private static ActivityStrategy STRATEGY = new DefaultActivityModel();
 
+    /**
+     * Set the strategy to be used.
+     * @param strategy The `ActivityStrategy` to classify with.
+     */
     public static void setStrategy(ActivityStrategy strategy) {
         STRATEGY = strategy;
     }
@@ -33,7 +35,7 @@ public final class ActivityClassifier {
      *
      * @param messageRate messages received per second during the last minute
      * @param secondsSinceLastMessage seconds since the most recent message
-     * @return NO_ACTIVITY, NORMAL, or HIGH_ACTIVITY
+     * @return Output classification of strategy.
      * @author tphan56
      */
     public static String classify(

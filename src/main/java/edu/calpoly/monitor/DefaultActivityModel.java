@@ -13,10 +13,24 @@ import org.tribuo.provenance.SimpleDataSourceProvenance;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This classifier uses the message rate and the number of seconds since
+ * the last message to return NO_ACTIVITY, NORMAL, or HIGH_ACTIVITY.
+ *
+ * @author an-prata
+ * @version 1.0
+ */
 public class DefaultActivityModel implements ActivityStrategy {
     private final LabelFactory factory = new LabelFactory();
     private final Model<Label> model = trainModel();
 
+    /**
+     * Perform a prediction using this strategy.
+     *
+     * @param input The input on which to form a prediction.
+     * @return The prediction, one of "NO_ACTIVITY", "NORMAL", or
+     *         "HIGH_ACTIVITY".
+     */
     @Override
     public Prediction<Label> predict(Example<Label> input) {
         return model.predict(input);
