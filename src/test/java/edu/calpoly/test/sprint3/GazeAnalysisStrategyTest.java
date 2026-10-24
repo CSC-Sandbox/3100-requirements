@@ -1,36 +1,73 @@
-package edu.calpoly.test.sprint1;
+
+package edu.calpoly.test.sprint3;
+
+import edu.calpoly.eye.GatherEye;
+import edu.calpoly.eye.GazeAnalysisStrategy;
+import edu.calpoly.eye.PointAnalysis;
+import edu.calpoly.eye.AreaAnalysis;
+import edu.calpoly.eye.VectorAnalysis;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
- * Course-provided receiver used to test GatherEye.java.
+ * Used to test GatherEye's implementation of GazeAnalysisStrategy.java.
  *
  * @author Marshall Ramsey (mars-rams)
  * @version 1.0 (2026-10-24)
  */
-public class TestGatherEye {
+public class GazeAnalysisStrategyTest {
 
-  private static final int PORT = 5000;
+    private static final String AREA_ANALYSIS_HEADER =
+            "GAZE AREA: X;Y;WIDTH;HEIGHT";
 
-  public static void main(String[] args) {
-    System.out.println("Waiting for gaze data on localhost:" + PORT + "...");
-    System.out.println("Expected format: GAZE,X,Y");
+    private static final String VECTOR_ANALYSIS_HEADER =
+            "GAZE VECTOR: HEAD_X;HEAD_Y;TAIL_X;TAIL_Y";
 
-    try (ServerSocket server = new ServerSocket(PORT)) {
-      while (true) {
-        try (Socket socket = server.accept();
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-          String message = in.readLine();
-          if (message != null) {
-            System.out.println("Gaze Position Received");
-            System.out.println(message);
-            if (!message.startsWith("GAZE,")) {
-              System.out.println("WARNING: message should begin with GAZE,");
-            }
-          }
-        }
-      }
-    } catch (IOException e) {
-      System.err.println("Test server stopped: " + e.getMessage());
+    @Test
+    void testCreateMessage() {
+        GazeAnalysisStrategy strategy = new PointAnalysis();
+
+        assertEquals(
+                "GAZE,100.0,200.0",
+                strategy.createMessage(100.0f, 200.0f)
+        );
     }
-  }
 
+    @Test
+    void testCreateAreaMessage() {
+        GazeAnalysisStrategy strategy = new AreaAnalysis();
+
+        assertEquals(
+                AREA_ANALYSIS_HEADER,
+                strategy.createMessage(1.0f, 2.0f).split(",")[0]
+        );
+    }
+
+    @Test
+    void testCreateVectorMessage() {
+        GazeAnalysisStrategy strategy = new VectorAnalysis();
+
+        assertEquals(
+                VECTOR_ANALYSIS_HEADER,
+                strategy.createMessage(1.0f, 2.0f).split(",")[0]
+        );
+    }
+
+    @Test
+    void testSwitchStrategy() {
+        GatherEye gatherEye = new GatherEye();
+
+        GazeAnalysisStrategy pointStrategy = new PointAnalysis();
+        GazeAnalysisStrategy areaStrategy = new AreaAnalysis();
+
+        gatherEye.setGazeAnalysisStrategy(pointStrategy);
+        gatherEye.setGazeAnalysisStrategy(areaStrategy);
+
+        assertEquals(
+                AREA_ANALYSIS_HEADER,
+                areaStrategy.createMessage(1.0f, 2.0f).split(",")[0]
+        );
+    }
 }

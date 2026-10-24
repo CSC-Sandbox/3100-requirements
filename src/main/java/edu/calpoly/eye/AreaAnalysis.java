@@ -1,27 +1,47 @@
+package edu.calpoly.eye;
+
+import java.util.ArrayList;
+
+/**
+ * Implementation of GaseAnalysisStrategy
+ *
+ * Calculates and broadcasts "area" rectangle based off of up to 5
+ * received points from GatherEye, then resets
+ *
+ * Format header: "GAZE AREA: X;Y;WIDTH;HEIGHT"
+ *
+ * @author Marshall Ramsey (mars-rams)
+ * @version 1.0 (2026-10-24)
+ */
 public class AreaAnalysis implements GazeAnalysisStrategy{
 
 	private Point latestPoint;
 	private Rectangle latestRectangle;
-	private Point[] pointList;
 
-	private final int BORDER_SIZE = 3;
+	private final ArrayList<Point> pointList = new ArrayList<>();
+
+	private static final int MAX_POINTS = 5;
+	private static final int BORDER_SIZE = 3;
 
 
 	@Override
-	String createMessage(int x, int y) {
+	public String createMessage(float x, float y) {
 		
-		latestPoint = new Point(x, y);
-		pointList.append(Point);
+		if (pointList.size() >= MAX_POINTS) {
+			pointList.remove(0);
+		}
 
-		if (1 < pointList.length < 6) {
-			this.latestRectangle = calculateRectangle();
+		latestPoint = new Point(x, y);
+		pointList.add(latestPoint);
+
+		if (pointList.size() > 1) {
+			latestRectangle = calculateRectangle();
 		} else {
-			pointList.clear();
-			this.latestRectangle = new Rectangle(
+			latestRectangle = new Rectangle(
 				latestPoint.getX() - BORDER_SIZE,
 				latestPoint.getY() - BORDER_SIZE,
 				BORDER_SIZE * 2,
-				BORDER SIZE * 2
+				BORDER_SIZE * 2
 			);
 		}
 
@@ -32,43 +52,49 @@ public class AreaAnalysis implements GazeAnalysisStrategy{
 			latestRectangle.getHeight();
 	}
 
-	private calculateRectangle() {
+	private Rectangle calculateRectangle() {
 
-		int totalX = 0;
-		int totalY = 0;
+		float totalX = 0;
+		float totalY = 0;
 
 		float meanX = 0;
 		float meanY = 0;
 
 
-		for (point:pointList) {
+		for (Point point : pointList) {
 			totalX += point.getX();
 			totalY += point.getY();
-			
 		}
 
-		meanX = totalX / pointList.length();
-		meanY = totalY / pointList.length();
+		int count = pointList.size();
+
+		meanX = totalX / count; 
+		meanY = totalY / count; 
 		
 		float deviationX = 0;
 		float deviationY = 0;
 
-		for (point:pointList) {
+		for (Point point : pointList) {
 			deviationX += Math.abs(point.getX() - meanX);
 			deviationY += Math.abs(point.getY() - meanY);
 		}
+
+		float averageDeviationX = deviationX / count;
+		float averageDeviationY = deviationY / count;
+
+		float rectWidth = averageDeviationX * 2;
+		float rectHeight = averageDeviationY * 2;
+
+		float rectX = meanX - averageDeviationX;
+		float rectY = meanY - averageDeviationY;
 		
-		float rectWidth = (deviationX / pointList.length());
-		float rectHeight = (deviationY / pointList.length());
-		float rectX = meanX - deviationX / 2;
-		float rectY = meanY - deviationY / 2;
 
 		return new Rectangle(
-			rectX;
-			rectY;
-			rectWidth;
-			rectHeight;
-		)
+			rectX,
+			rectY,
+			rectWidth,
+			rectHeight
+		);
 	}
 
 }

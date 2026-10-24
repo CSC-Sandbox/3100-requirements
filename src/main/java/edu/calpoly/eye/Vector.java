@@ -1,29 +1,34 @@
+package edu.calpoly.eye;
+
+/**
+ *
+ * Vector class used to better easily store
+ * information for VectorAnalysis 
+ *
+ * @author Marshall Ramsey (mars-rams)
+ * @version 1.0 (2026-10-24)
+ */
 public class Vector {
 
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 
-	public Vector(int x, int y) {
+	public Vector(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public Vector() {
-		this.x = 0;
-		this.y = 0;
-	}
-
-	public String getX(){
+	public float getX(){
 		return this.x;
 	}
-	public String getY(){
+	public float getY(){
 		return this.y;
 	}
 
-	public void setX(int x){
+	public void setX(float x){
 		this.x = x;
 	}
-	public void setY(int x){
+	public void setY(float x){
 		this.y = x;
 	}
 

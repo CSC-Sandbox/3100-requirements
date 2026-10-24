@@ -15,20 +15,28 @@ import edu.calpoly.provided.*;
  **/
 public class GatherEye {
 
-	private GazeAnalysisStrategy PointAnalysis;
+	private GazeAnalysisStrategy strategy;
 
-	public GatherEye(){}
+	public GatherEye(){
+		this.strategy = new PointAnalysis();	
+	}
 
 	public void displayGUI(){
 		GatherEyeGUI gui = new GatherEyeGUI(this);
 	}
 
 	public void setGazeAnalysisStrategy(GazeAnalysisStrategy strategy) {
-		this.GazeAnalysisStrategy = strategy;
+		if (strategy == null) {
+			throw new IllegalArgumentException(
+				"Null strategy"
+			);
+		}
+		this.strategy = strategy;
 	}
 
 	protected void sendBrokerCoords(float x, float y){
 		String message = strategy.createMessage(x, y);
+
 		Broker broker = new Broker("localhost", 5000);
 		broker.send(message);
 	}
