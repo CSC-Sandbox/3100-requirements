@@ -13,7 +13,7 @@ import org.apache.commons.csv.CSVPrinter;
 
 import edu.calpoly.provided.Broker;
 
-/*
+/**
  * Connects to a Broker and uses it to receive messages and put them in a file.
  * Supported by StoreMessagesBuiler
  *
